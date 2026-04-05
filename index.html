@@ -32,9 +32,7 @@
                 color: #fff;
                 transition: background 0.2s;
             }
-            .lang-toggle:hover {
-                background: rgba(255,255,255,0.15);
-            }
+            .lang-toggle:hover { background: rgba(255,255,255,0.15); }
             .research-card {
                 padding: 1.5rem;
                 height: 100%;
@@ -42,9 +40,58 @@
                 border-radius: 0.5rem;
                 transition: box-shadow 0.2s;
             }
-            .research-card:hover {
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            .research-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+            /* Activity timeline */
+            .activity-list { list-style: none; padding: 0; max-width: 720px; margin: 0 auto; }
+            .activity-item {
+                display: flex;
+                gap: 1.2rem;
+                padding: 1.2rem 0;
+                border-bottom: 1px solid #e9ecef;
+                align-items: flex-start;
             }
+            .activity-item:last-child { border-bottom: none; }
+            .activity-date {
+                flex-shrink: 0;
+                width: 6.5rem;
+                font-size: 0.8rem;
+                color: #6c757d;
+                padding-top: 0.15rem;
+                font-family: 'Montserrat', sans-serif;
+            }
+            .activity-badge {
+                flex-shrink: 0;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 0.2rem 0.55rem;
+                border-radius: 3px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-top: 0.1rem;
+            }
+            .badge-blog { background: #e8f4fd; color: #0d6efd; }
+            .badge-article { background: #e8f8f0; color: #198754; }
+            .activity-body { flex: 1; }
+            .activity-title {
+                font-size: 0.97rem;
+                font-weight: 700;
+                margin: 0 0 0.25rem;
+                line-height: 1.4;
+            }
+            .activity-title a { color: inherit; text-decoration: none; }
+            .activity-title a:hover { text-decoration: underline; }
+            .activity-desc {
+                font-size: 0.85rem;
+                color: #6c757d;
+                margin: 0;
+                line-height: 1.5;
+            }
+
+            /* Article modal */
+            .article-modal .modal-body { padding: 2rem 2.5rem; line-height: 1.8; }
+            .article-modal .modal-body h1 { font-size: 1.5rem; }
+            .article-modal .modal-body h2 { font-size: 1.2rem; margin-top: 1.8rem; }
         </style>
     </head>
     <body id="page-top">
@@ -58,6 +105,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#research" data-en="Research" data-ja="研究">研究</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activity" data-en="Activity" data-ja="活動">活動</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact" data-en="Contact" data-ja="連絡先">連絡先</a></li>
@@ -139,6 +187,88 @@
             </div>
         </section>
 
+        <!-- Activity Section-->
+        <section class="page-section bg-light" id="activity">
+            <div class="container">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Activity" data-ja="活動">活動</h2>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+
+                <ul class="activity-list">
+
+                    <!-- =====================================================
+                         エントリー追加テンプレート
+                         -------------------------------------------------------
+                         【Lab Blog】研究室ブログへの外部リンク:
+                         <li class="activity-item">
+                             <span class="activity-date">YYYY-MM-DD</span>
+                             <span class="activity-badge badge-blog" data-en="Lab Blog" data-ja="研究室ブログ">研究室ブログ</span>
+                             <div class="activity-body">
+                                 <p class="activity-title"><a href="URL" target="_blank">タイトル</a></p>
+                                 <p class="activity-desc" data-en="EN description" data-ja="JA description">JA description</p>
+                             </div>
+                         </li>
+
+                         【Article】ページ内記事（モーダル表示）:
+                         <li class="activity-item">
+                             <span class="activity-date">YYYY-MM-DD</span>
+                             <span class="activity-badge badge-article" data-en="Article" data-ja="記事">記事</span>
+                             <div class="activity-body">
+                                 <p class="activity-title">
+                                     <a href="#" data-bs-toggle="modal" data-bs-target="#articleN">タイトル</a>
+                                 </p>
+                                 <p class="activity-desc" data-en="EN description" data-ja="JA description">JA description</p>
+                             </div>
+                         </li>
+                         ===================================================== -->
+
+                    <li class="activity-item">
+                        <span class="activity-date">2025-11-26</span>
+                        <span class="activity-badge badge-blog" data-en="Lab Blog" data-ja="研究室ブログ">研究室ブログ</span>
+                        <div class="activity-body">
+                            <p class="activity-title">
+                                <a href="https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-11-26-117thMBL/" target="_blank">第117回MBL研究発表会に参加しました</a>
+                            </p>
+                            <p class="activity-desc"
+                               data-en="Participated in the 117th MBL Workshop held in Himakajima, Aichi. Presented research results."
+                               data-ja="愛知県日間賀島で開催された第117回MBL研究発表会に参加し、研究発表を行いました。">愛知県日間賀島で開催された第117回MBL研究発表会に参加し、研究発表を行いました。</p>
+                        </div>
+                    </li>
+
+                    <li class="activity-item">
+                        <span class="activity-date">2025-09-17</span>
+                        <span class="activity-badge badge-blog" data-en="Lab Blog" data-ja="研究室ブログ">研究室ブログ</span>
+                        <div class="activity-body">
+                            <p class="activity-title">
+                                <a href="https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-09-17-MBL-UBI-CDS-ASD-2025/" target="_blank">第116回MBL・第87回UBI・第44回CDS・第33回ASD合同研究発表会に参加しました</a>
+                            </p>
+                            <p class="activity-desc"
+                               data-en="Participated in the joint MBL/UBI/CDS/ASD workshop held in Toyama."
+                               data-ja="富山県民会館で開催されたMBL・UBI・CDS・ASD合同研究発表会に参加しました。">富山県民会館で開催されたMBL・UBI・CDS・ASD合同研究発表会に参加しました。</p>
+                        </div>
+                    </li>
+
+                    <li class="activity-item">
+                        <span class="activity-date">2025-07-02</span>
+                        <span class="activity-badge badge-blog" data-en="Lab Blog" data-ja="研究室ブログ">研究室ブログ</span>
+                        <div class="activity-body">
+                            <p class="activity-title">
+                                <a href="https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-07-02-geoten2025/" target="_blank">ジオ展2025に参加しました</a>
+                            </p>
+                            <p class="activity-desc"
+                               data-en="Participated in Geo-ten 2025, an exhibition on geospatial and location information technologies, held in Tokyo."
+                               data-ja="東京で開催された地図・位置情報関連の合同展示会「ジオ展2025」に参加しました。">東京で開催された地図・位置情報関連の合同展示会「ジオ展2025」に参加しました。</p>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+
         <!-- Awards Section-->
         <section class="page-section bg-primary text-white mb-0" id="awards">
             <div class="container">
@@ -155,7 +285,7 @@
                            data-en="Awards and recognitions will be listed here."
                            data-ja="受賞歴をここに掲載していきます。">受賞歴をここに掲載していきます。</p>
 
-                        <!-- 受賞を追加する場合はこのブロックをコピーしてください / Copy this block to add an award:
+                        <!-- 受賞を追加する場合 / To add an award:
                         <div class="mb-4">
                             <h5 class="fw-bold mb-1">賞の名前 / Award Name</h5>
                             <p class="mb-0 opacity-75">学会・機関名 / Conference — Year</p>
@@ -219,22 +349,17 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 mb-3 mb-lg-0">
-                        <h4 class="text-uppercase mb-3"
-                            data-en="Affiliation" data-ja="所属">所属</h4>
-                        <p class="lead mb-0"
-                           data-en="Kawaguchi Lab<br />Nagoya University"
-                           data-ja="名古屋大学<br />河口研究室">名古屋大学<br />河口研究室</p>
+                        <h4 class="text-uppercase mb-3" data-en="Affiliation" data-ja="所属">所属</h4>
+                        <p class="lead mb-0" data-en="Kawaguchi Lab<br />Nagoya University" data-ja="名古屋大学<br />河口研究室">名古屋大学<br />河口研究室</p>
                     </div>
                     <div class="col-lg-4 mb-3 mb-lg-0">
-                        <h4 class="text-uppercase mb-3"
-                            data-en="Links" data-ja="リンク">リンク</h4>
+                        <h4 class="text-uppercase mb-3" data-en="Links" data-ja="リンク">リンク</h4>
                         <a class="btn btn-outline-light btn-social mx-1" href="https://github.com/aoi-33" target="_blank"><i class="fab fa-fw fa-github"></i></a>
                         <a class="btn btn-outline-light btn-social mx-1" href="mailto:aoi@ucl.nuee.nagoya-u.ac.jp"><i class="fas fa-fw fa-envelope"></i></a>
                         <a class="btn btn-outline-light btn-social mx-1" href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank"><i class="fas fa-fw fa-building-columns"></i></a>
                     </div>
                     <div class="col-lg-4">
-                        <h4 class="text-uppercase mb-3"
-                            data-en="Lab" data-ja="研究室">研究室</h4>
+                        <h4 class="text-uppercase mb-3" data-en="Lab" data-ja="研究室">研究室</h4>
                         <p class="lead mb-0">
                             <a class="text-white" href="https://www.ucl.nuee.nagoya-u.ac.jp/member/" target="_blank"
                                data-en="Kawaguchi Lab Members" data-ja="河口研究室メンバー">河口研究室メンバー</a>
@@ -246,6 +371,30 @@
         <div class="copyright py-4 text-center text-white bg-dark">
             <div class="container"><small>Copyright &copy; Aoi Sassa 2026</small></div>
         </div>
+
+        <!-- =====================================================
+             個人記事モーダル / Personal Article Modals
+             記事を追加するたびにこのブロックをコピーして番号を増やしてください
+             ===================================================== -->
+
+        <!-- Article Modal Template (使うときはコメントを外して番号を変更)
+        <div class="modal fade article-modal" id="articleN" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold">記事タイトル</h5>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-4">YYYY-MM-DD</p>
+                        <p>本文をここに書く。Markdown的なHTMLで書いてOK。</p>
+                        <h2>見出し</h2>
+                        <p>本文...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
@@ -267,7 +416,6 @@
                 applyLang(currentLang === 'ja' ? 'en' : 'ja');
             }
 
-            // Apply saved language on load
             applyLang(currentLang);
         </script>
     </body>
