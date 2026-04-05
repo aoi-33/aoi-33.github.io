@@ -3,18 +3,49 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Aoi Sassa - Research Student at Kawaguchi Lab, Nagoya University" />
+        <meta name="description" content="Aoi Sassa - M1 Student at Kawaguchi Lab, Nagoya University" />
         <meta name="author" content="Aoi Sassa" />
         <title>Aoi Sassa</title>
-        <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <style>
+            .masthead-avatar {
+                width: 12rem;
+                height: 12rem;
+                border-radius: 50%;
+                object-fit: cover;
+                object-position: center top;
+                border: 4px solid rgba(255, 255, 255, 0.4);
+            }
+            .lang-toggle {
+                cursor: pointer;
+                font-size: 0.8rem;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                padding: 0.3rem 0.7rem;
+                border-radius: 4px;
+                border: 1px solid rgba(255,255,255,0.4);
+                background: transparent;
+                color: #fff;
+                transition: background 0.2s;
+            }
+            .lang-toggle:hover {
+                background: rgba(255,255,255,0.15);
+            }
+            .research-card {
+                padding: 1.5rem;
+                height: 100%;
+                border: 1px solid #dee2e6;
+                border-radius: 0.5rem;
+                transition: box-shadow 0.2s;
+            }
+            .research-card:hover {
+                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            }
+        </style>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -22,41 +53,43 @@
             <div class="container">
                 <a class="navbar-brand" href="#page-top">Aoi Sassa</a>
                 <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
+                    Menu <i class="fas fa-bars"></i>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#research">Research</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards">Awards</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">About</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li>
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#research" data-en="Research" data-ja="研究">研究</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact" data-en="Contact" data-ja="連絡先">連絡先</a></li>
+                        <li class="nav-item mx-0 mx-lg-2">
+                            <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
         <!-- Masthead-->
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
-                <!-- Masthead Avatar Image-->
                 <img class="masthead-avatar mb-5" src="https://www.ucl.nuee.nagoya-u.ac.jp/static/05743e970806c1b851708b42550a9f43/c1d72/aoi.png" alt="Aoi Sassa" />
-                <!-- Masthead Heading-->
                 <h1 class="masthead-heading text-uppercase mb-0">Aoi Sassa</h1>
-                <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <!-- Masthead Subheading-->
-                <p class="masthead-subheading font-weight-light mb-0">M1 Student &mdash; Kawaguchi Lab, Nagoya University</p>
+                <p class="masthead-subheading font-weight-light mb-0"
+                   data-en="M1 Student &mdash; Kawaguchi Lab, Nagoya University"
+                   data-ja="名古屋大学 河口研究室 修士1年">名古屋大学 河口研究室 修士1年</p>
             </div>
         </header>
 
         <!-- Research Section-->
         <section class="page-section portfolio" id="research">
             <div class="container">
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Research</h2>
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Research" data-ja="研究">研究</h2>
                 <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
@@ -64,33 +97,42 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <p class="lead text-center mb-5">
-                            I am a member of <a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">Kawaguchi Lab</a>
-                            at Nagoya University (Graduate School of Engineering, Dept. of Information and Communication Engineering).
-                            Our lab focuses on mobile and ubiquitous computing, aiming to build a human-friendly ubiquitous information environment.
+                        <p class="lead text-center mb-5"
+                           data-en='I am a member of <a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">Kawaguchi Lab</a> at Nagoya University (Graduate School of Engineering, Dept. of Information and Communication Engineering). Our lab focuses on mobile and ubiquitous computing, aiming to build a human-friendly ubiquitous information environment.'
+                           data-ja='名古屋大学大学院 工学研究科 情報・通信工学専攻の<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。'>
+                            名古屋大学大学院 工学研究科 情報・通信工学専攻の<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。
                         </p>
                     </div>
                 </div>
                 <div class="row justify-content-center text-center">
                     <div class="col-md-4 mb-4">
-                        <div class="p-4 h-100 border rounded">
+                        <div class="research-card">
                             <i class="fas fa-wifi fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold">Ubiquitous Computing</h5>
-                            <p class="mb-0">Seamless connectivity and context-aware systems for everyday environments.</p>
+                            <h5 class="text-uppercase fw-bold"
+                                data-en="Ubiquitous Computing" data-ja="ユビキタスコンピューティング">ユビキタスコンピューティング</h5>
+                            <p class="mb-0"
+                               data-en="Seamless connectivity and context-aware systems for everyday environments."
+                               data-ja="日常環境におけるシームレスな接続とコンテキストアウェアシステム。">日常環境におけるシームレスな接続とコンテキストアウェアシステム。</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <div class="p-4 h-100 border rounded">
+                        <div class="research-card">
                             <i class="fas fa-microchip fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold">IoT &amp; Sensing</h5>
-                            <p class="mb-0">Environmental sensing technologies and IoT platforms for smart spaces.</p>
+                            <h5 class="text-uppercase fw-bold"
+                                data-en="IoT &amp; Sensing" data-ja="IoT・センシング">IoT・センシング</h5>
+                            <p class="mb-0"
+                               data-en="Environmental sensing technologies and IoT platforms for smart spaces."
+                               data-ja="スマートスペースのための環境センシング技術とIoTプラットフォーム。">スマートスペースのための環境センシング技術とIoTプラットフォーム。</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <div class="p-4 h-100 border rounded">
+                        <div class="research-card">
                             <i class="fas fa-mobile-screen fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold">Mobile Computing</h5>
-                            <p class="mb-0">Network technologies and software platforms for mobile environments.</p>
+                            <h5 class="text-uppercase fw-bold"
+                                data-en="Mobile Computing" data-ja="モバイルコンピューティング">モバイルコンピューティング</h5>
+                            <p class="mb-0"
+                               data-en="Network technologies and software platforms for mobile environments."
+                               data-ja="モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。">モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。</p>
                         </div>
                     </div>
                 </div>
@@ -100,7 +142,8 @@
         <!-- Awards Section-->
         <section class="page-section bg-primary text-white mb-0" id="awards">
             <div class="container">
-                <h2 class="page-section-heading text-center text-uppercase text-white">Awards</h2>
+                <h2 class="page-section-heading text-center text-uppercase text-white"
+                    data-en="Awards" data-ja="受賞歴">受賞歴</h2>
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
@@ -108,13 +151,14 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-8 text-center">
-                        <!-- Awards will be added here -->
-                        <p class="lead fst-italic opacity-75">Awards and recognitions will be listed here.</p>
+                        <p class="lead fst-italic opacity-75"
+                           data-en="Awards and recognitions will be listed here."
+                           data-ja="受賞歴をここに掲載していきます。">受賞歴をここに掲載していきます。</p>
 
-                        <!-- Example entry (uncomment and duplicate to add awards):
+                        <!-- 受賞を追加する場合はこのブロックをコピーしてください / Copy this block to add an award:
                         <div class="mb-4">
-                            <h5 class="fw-bold mb-1">Award Name</h5>
-                            <p class="mb-0 opacity-75">Conference / Organization &mdash; Year</p>
+                            <h5 class="fw-bold mb-1">賞の名前 / Award Name</h5>
+                            <p class="mb-0 opacity-75">学会・機関名 / Conference — Year</p>
                         </div>
                         -->
                     </div>
@@ -125,7 +169,8 @@
         <!-- About Section-->
         <section class="page-section" id="about">
             <div class="container">
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">About</h2>
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="About" data-ja="自己紹介">自己紹介</h2>
                 <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
@@ -133,10 +178,10 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <p class="lead text-center">
-                            I am Aoi Sassa, a first-year master's student at Nagoya University.
-                            I belong to Kawaguchi Laboratory, where we work on ubiquitous and mobile computing technologies
-                            to build smarter, more connected everyday environments.
+                        <p class="lead text-center"
+                           data-en="I am Aoi Sassa, a first-year master's student at Nagoya University. I belong to Kawaguchi Laboratory, where we work on ubiquitous and mobile computing technologies to build smarter, more connected everyday environments."
+                           data-ja="笹 葵です。名古屋大学大学院 修士1年として、河口研究室でユビキタス・モバイルコンピューティングの研究に取り組んでいます。">
+                            笹 葵です。名古屋大学大学院 修士1年として、河口研究室でユビキタス・モバイルコンピューティングの研究に取り組んでいます。
                         </p>
                     </div>
                 </div>
@@ -146,7 +191,8 @@
         <!-- Contact Section-->
         <section class="page-section bg-light" id="contact">
             <div class="container">
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Contact</h2>
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Contact" data-ja="連絡先">連絡先</h2>
                 <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
@@ -154,7 +200,9 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-lg-6 text-center">
-                        <p class="lead mb-4">Feel free to reach out via email or GitHub.</p>
+                        <p class="lead mb-4"
+                           data-en="Feel free to reach out via email or GitHub."
+                           data-ja="メールやGitHubからお気軽にどうぞ。">メールやGitHubからお気軽にどうぞ。</p>
                         <a class="btn btn-primary btn-xl mb-3 me-2" href="mailto:aoi@ucl.nuee.nagoya-u.ac.jp">
                             <i class="fas fa-envelope me-2"></i>Email
                         </a>
@@ -171,35 +219,56 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 mb-3 mb-lg-0">
-                        <h4 class="text-uppercase mb-3">Affiliation</h4>
-                        <p class="lead mb-0">
-                            Kawaguchi Lab<br />
-                            Nagoya University
-                        </p>
+                        <h4 class="text-uppercase mb-3"
+                            data-en="Affiliation" data-ja="所属">所属</h4>
+                        <p class="lead mb-0"
+                           data-en="Kawaguchi Lab<br />Nagoya University"
+                           data-ja="名古屋大学<br />河口研究室">名古屋大学<br />河口研究室</p>
                     </div>
                     <div class="col-lg-4 mb-3 mb-lg-0">
-                        <h4 class="text-uppercase mb-3">Links</h4>
+                        <h4 class="text-uppercase mb-3"
+                            data-en="Links" data-ja="リンク">リンク</h4>
                         <a class="btn btn-outline-light btn-social mx-1" href="https://github.com/aoi-33" target="_blank"><i class="fab fa-fw fa-github"></i></a>
                         <a class="btn btn-outline-light btn-social mx-1" href="mailto:aoi@ucl.nuee.nagoya-u.ac.jp"><i class="fas fa-fw fa-envelope"></i></a>
                         <a class="btn btn-outline-light btn-social mx-1" href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank"><i class="fas fa-fw fa-building-columns"></i></a>
                     </div>
                     <div class="col-lg-4">
-                        <h4 class="text-uppercase mb-3">Lab</h4>
+                        <h4 class="text-uppercase mb-3"
+                            data-en="Lab" data-ja="研究室">研究室</h4>
                         <p class="lead mb-0">
-                            <a class="text-white" href="https://www.ucl.nuee.nagoya-u.ac.jp/member/" target="_blank">Kawaguchi Lab Members</a>
+                            <a class="text-white" href="https://www.ucl.nuee.nagoya-u.ac.jp/member/" target="_blank"
+                               data-en="Kawaguchi Lab Members" data-ja="河口研究室メンバー">河口研究室メンバー</a>
                         </p>
                     </div>
                 </div>
             </div>
         </footer>
-        <!-- Copyright Section-->
         <div class="copyright py-4 text-center text-white bg-dark">
             <div class="container"><small>Copyright &copy; Aoi Sassa 2026</small></div>
         </div>
 
-        <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <script>
+            const LANG_KEY = 'lang';
+            let currentLang = localStorage.getItem(LANG_KEY) || 'ja';
+
+            function applyLang(lang) {
+                currentLang = lang;
+                localStorage.setItem(LANG_KEY, lang);
+                document.documentElement.lang = lang;
+                document.getElementById('langToggle').textContent = lang === 'ja' ? 'EN' : 'JP';
+                document.querySelectorAll('[data-en][data-ja]').forEach(el => {
+                    el.innerHTML = el.getAttribute('data-' + lang);
+                });
+            }
+
+            function toggleLang() {
+                applyLang(currentLang === 'ja' ? 'en' : 'ja');
+            }
+
+            // Apply saved language on load
+            applyLang(currentLang);
+        </script>
     </body>
 </html>
