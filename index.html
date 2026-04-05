@@ -11,6 +11,7 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
         <style>
             .masthead .masthead-avatar {
                 width: 12rem;
@@ -41,6 +42,32 @@
                 transition: box-shadow 0.2s;
             }
             .research-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+            /* Skills */
+            .skill-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.6rem;
+                padding: 1.4rem 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 0.5rem;
+                transition: box-shadow 0.2s, transform 0.2s;
+                background: #fff;
+            }
+            .skill-card:hover {
+                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                transform: translateY(-3px);
+            }
+            .skill-card i { font-size: 3rem; line-height: 1; }
+            .skill-card span {
+                font-size: 0.85rem;
+                font-weight: 700;
+                font-family: 'Montserrat', sans-serif;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                color: #555;
+            }
 
             /* Activity timeline */
             .activity-list { list-style: none; padding: 0; max-width: 720px; margin: 0 auto; }
@@ -106,6 +133,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#research" data-en="Research" data-ja="研究">研究</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#skills" data-en="Skills" data-ja="スキル">スキル</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activity" data-en="Activity" data-ja="活動">活動</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
@@ -184,6 +212,46 @@
                                data-ja="モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。">モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section-->
+        <section class="page-section bg-light" id="skills">
+            <div class="container">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Skills" data-ja="スキル">スキル</h2>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="row justify-content-center g-3">
+
+                    <!-- =====================================================
+                         スキル追加テンプレート / To add a skill:
+                         <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                             <div class="skill-card">
+                                 <i class="devicon-XXXX-original colored"></i>
+                                 <span>Name</span>
+                             </div>
+                         </div>
+                         アイコン一覧: https://devicon.dev/
+                         ===================================================== -->
+
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <i class="devicon-react-original colored"></i>
+                            <span>React.js</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <i class="devicon-python-plain colored"></i>
+                            <span>Python</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
