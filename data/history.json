@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2019-04",
+    "label_ja": "高校入学",
+    "label_en": "High School",
+    "venue_ja": "一宮高校",
+    "venue_en": "Ichinomiya High School"
+  },
+  {
+    "date": "2022-03",
+    "label_ja": "高校卒業",
+    "label_en": "HS Graduation",
+    "venue_ja": "一宮高校",
+    "venue_en": "Ichinomiya High School"
+  },
+  {
+    "date": "2022-04",
+    "label_ja": "学部入学",
+    "label_en": "B.E. Program",
+    "venue_ja": "名古屋大学 工学部",
+    "venue_en": "Nagoya University, School of Engineering"
+  },
+  {
+    "date": "2026-03",
+    "label_ja": "学部卒業",
+    "label_en": "B.E.",
+    "venue_ja": "名古屋大学",
+    "venue_en": "Nagoya University"
+  },
+  {
+    "date": "2026-04",
+    "label_ja": "修士入学",
+    "label_en": "M.E. Program",
+    "venue_ja": "名古屋大学大学院 情報・通信工学専攻",
+    "venue_en": "Nagoya Univ. Graduate School (Info. & Comm. Eng.)"
+  }
+]

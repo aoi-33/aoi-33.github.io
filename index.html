@@ -562,6 +562,91 @@
                 color: var(--ink);
             }
 
+            /* === Career timeline (dot-style horizontal history graph) === */
+            .career-timeline-wrap {
+                position: relative;
+                padding: 0.5rem 0;
+            }
+            .career-timeline {
+                position: relative;
+                display: flex;
+                align-items: flex-start;
+            }
+            .career-timeline::before {
+                content: '';
+                position: absolute;
+                left: calc(50% / var(--n, 4));
+                right: calc(50% / var(--n, 4));
+                top: 5.25rem;
+                height: 1px;
+                background: var(--rule);
+                z-index: 0;
+            }
+            .career-milestone {
+                flex: 1 1 0;
+                min-width: 0;
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0 0.25rem;
+                text-align: center;
+            }
+            .career-caption {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 0.55rem;
+            }
+            .career-caption.above {
+                min-height: 5.25rem;
+                flex-direction: column-reverse;
+                padding-bottom: 0.7rem;
+            }
+            .career-caption.below {
+                flex-direction: column;
+                padding-top: 0.7rem;
+            }
+            .career-dot {
+                width: 12px; height: 12px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 0 3px #ffffff, 0 0 0 4px var(--accent);
+                flex-shrink: 0;
+                margin-top: -6px;
+            }
+            .career-date {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.72rem;
+                color: var(--muted);
+                letter-spacing: 0.05em;
+                white-space: nowrap;
+            }
+            .career-label {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--ink);
+                line-height: 1.3;
+                overflow-wrap: anywhere;
+            }
+            .career-venue {
+                font-size: 0.7rem;
+                color: var(--muted);
+                font-family: 'IBM Plex Mono', monospace;
+                line-height: 1.4;
+                overflow-wrap: anywhere;
+            }
+            @media (max-width: 575.98px) {
+                .career-date  { font-size: 0.62rem; letter-spacing: 0; }
+                .career-label { font-size: 0.72rem; }
+                .career-venue { font-size: 0.58rem; }
+                .career-milestone { padding: 0 0.15rem; }
+                .career-caption { gap: 0.4rem; }
+                .career-caption.above { min-height: 4.5rem; }
+                .career-timeline::before { top: 4.5rem; }
+            }
+
             /* === Activity timeline === */
             .activity-list {
                 list-style: none;
@@ -793,6 +878,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#career" data-en="Career" data-ja="経歴">経歴</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#skills" data-en="Skills" data-ja="スキル">スキル</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activity" data-en="Activity" data-ja="活動">活動</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
@@ -843,6 +929,26 @@
                            data-ja='佐々葵です。名古屋大学大学院 工学研究科 情報・通信工学専攻の修士1年として、<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。'>
                             佐々葵です。名古屋大学大学院 工学研究科 情報・通信工学専攻の修士1年として、<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。
                         </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Section (dot timeline, data-driven from data/history.json)-->
+        <section class="page-section" id="career">
+            <div class="container">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Career" data-ja="経歴">経歴</h2>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <div class="career-timeline-wrap">
+                    <div class="career-timeline" id="career-timeline">
+                        <noscript>
+                            <p class="text-center"><small>経歴の表示には JavaScript が必要です / JavaScript required.</small></p>
+                        </noscript>
                     </div>
                 </div>
             </div>
@@ -1124,22 +1230,80 @@
                 }).join('');
             }
 
-            (async function loadEntries() {
+            function renderCareer(history) {
+                const el = document.getElementById('career-timeline');
+                if (!el || !history.length) return;
+                const toMs = d => {
+                    const [y, m] = String(d).split('-').map(Number);
+                    return new Date(y, (m || 1) - 1, 1).getTime();
+                };
+                const sorted = [...history].sort((a, b) => toMs(a.date) - toMs(b.date));
+
+                // Auto-merge entries within ~6 months (e.g., graduation + enrollment)
+                const MERGE_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+                const groups = [];
+                for (const entry of sorted) {
+                    const tail = groups[groups.length - 1];
+                    if (tail && toMs(entry.date) - toMs(tail[tail.length - 1].date) <= MERGE_MS) {
+                        tail.push(entry);
+                    } else {
+                        groups.push([entry]);
+                    }
+                }
+                el.style.setProperty('--n', groups.length);
+
+                const renderEntry = h => {
+                    const hasVenue = h.venue_ja || h.venue_en;
+                    const venue = hasVenue
+                        ? `<span class="career-venue" data-en="${escapeHtml(h.venue_en || h.venue_ja)}" data-ja="${escapeHtml(h.venue_ja || h.venue_en)}">${escapeHtml(h.venue_ja || h.venue_en)}</span>`
+                        : '';
+                    return `
+                        <span class="career-date">${escapeHtml(h.date)}</span>
+                        <span class="career-label" data-en="${escapeHtml(h.label_en)}" data-ja="${escapeHtml(h.label_ja)}">${escapeHtml(h.label_ja)}</span>
+                        ${venue}
+                    `;
+                };
+
+                el.innerHTML = groups.map(group => {
+                    const above = group.length > 1 ? group.slice(0, -1).map(renderEntry).join('') : '';
+                    const below = renderEntry(group[group.length - 1]);
+                    return `
+                        <div class="career-milestone">
+                            <div class="career-caption above">${above}</div>
+                            <span class="career-dot" aria-hidden="true"></span>
+                            <div class="career-caption below">${below}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            (async function loadAll() {
                 try {
-                    const res = await fetch('data/entries.json', { cache: 'no-cache' });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    const entries = await res.json();
-                    entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
-                    renderActivity(entries);
-                    renderAwards(entries);
+                    const [entriesRes, historyRes] = await Promise.all([
+                        fetch('data/entries.json', { cache: 'no-cache' }),
+                        fetch('data/history.json', { cache: 'no-cache' }),
+                    ]);
+                    if (entriesRes.ok) {
+                        const entries = await entriesRes.json();
+                        entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+                        renderActivity(entries);
+                        renderAwards(entries);
+                    } else {
+                        console.error('[entries] HTTP', entriesRes.status);
+                    }
+                    if (historyRes.ok) {
+                        const history = await historyRes.json();
+                        renderCareer(history);
+                    } else {
+                        console.error('[history] HTTP', historyRes.status);
+                    }
                     if (typeof applyLang === 'function' && typeof currentLang !== 'undefined') {
                         applyLang(currentLang);
                     }
-                    // Refresh ScrollSpy now that section heights have changed
                     const spy = window.bootstrap && bootstrap.ScrollSpy.getInstance(document.body);
                     if (spy) spy.refresh();
                 } catch (err) {
-                    console.error('[entries] load failed:', err);
+                    console.error('[data] load failed:', err);
                 }
             })();
         </script>
