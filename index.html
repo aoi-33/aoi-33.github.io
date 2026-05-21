@@ -21,11 +21,13 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- FontAwesome via CSS (not all.js) — saves ~370KB blocking JS -->
         <link rel="preconnect" href="https://use.fontawesome.com" crossorigin />
+        <link rel="preconnect" href="https://ka-f.fontawesome.com" crossorigin />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" crossorigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
         <style>
             /* === Editorial Mono: Design tokens === */
@@ -53,11 +55,25 @@
                 --bs-body-bg:        #ffffff;
                 --bs-border-color:   var(--rule);
             }
+            /* === Responsive safety net (mobile-first base) === */
+            *, *::before, *::after { box-sizing: border-box; }
+            html, body { max-width: 100%; overflow-x: clip; }
+            img, svg, video { max-width: 100%; height: auto; }
             body {
                 font-family: var(--bs-font-sans-serif);
                 font-weight: 400;
                 color: var(--ink);
                 background: #ffffff;
+                min-width: 320px;
+            }
+            /* Respect reduced-motion preference */
+            @media (prefers-reduced-motion: reduce) {
+                *, *::before, *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
             }
             h1, h2, h3, h4, h5, h6,
             .masthead-heading, .page-section-heading {
@@ -112,6 +128,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                min-width: 0;
+                overflow: hidden;
             }
             .masthead-photo img {
                 width: 100%;
@@ -173,27 +191,33 @@
             }
             .masthead .divider-custom { display: none !important; }
 
-            /* Only stack on very narrow phones (< 480px). Otherwise keep 2-column. */
-            @media (max-width: 479px) {
+            /* Stack on phones up to large portrait widths (< 640px) so every
+               portrait-oriented device (iPhone SE 375 → Plus/Max 428, narrow
+               Androids) gets a single-column hero with the photo on top of
+               the text block. */
+            @media (max-width: 639.98px) {
                 .masthead { padding: 5rem 0 3.5rem; }
                 .masthead-grid {
                     grid-template-columns: 1fr;
-                    gap: 2rem;
+                    gap: 1.75rem;
                     min-height: 0;
                 }
                 .masthead-text {
+                    grid-column: 1;
                     grid-row: 1;
                     padding-left: 0;
                     align-items: center;
                     text-align: center;
                 }
                 .masthead-photo {
+                    grid-column: 1;
                     grid-row: 2;
                     border-right: 0;
                     border-top: 1px solid #3a3a3a;
-                    padding: 2rem 0 0;
+                    padding: 1.75rem 0 0;
+                    justify-content: center;
                 }
-                .masthead-photo img { max-width: 180px; }
+                .masthead-photo img { max-width: min(180px, 55vw); }
                 .masthead-divider { margin: 1rem auto; }
                 .masthead-subheading, .masthead-tagline { text-align: center; }
             }
@@ -206,18 +230,17 @@
                  992+     : default desktop styles untouched
                All interactive controls audited to ≥ 44×44px on touch sizes. */
 
-            /* ---- 480–767px: large phones / small tablets portrait ---- */
-            @media (min-width: 480px) and (max-width: 767.98px) {
-                /* Tighten the split-column hero so the text side has room to breathe */
+            /* ---- 640–767px: small tablets portrait (2-column hero re-enabled) ---- */
+            @media (min-width: 640px) and (max-width: 767.98px) {
                 .masthead { padding: 5.5rem 0 4rem; }
                 .masthead-grid {
-                    grid-template-columns: minmax(120px, 34%) 1fr;
+                    grid-template-columns: minmax(0, 32%) 1fr;
                     min-height: 220px;
                 }
-                .masthead-photo { padding-right: 1.5rem; }
-                .masthead-photo img { max-width: 200px; }
-                .masthead-text { padding-left: 1.5rem; }
-                .masthead-heading { font-size: clamp(1.85rem, 6vw, 2.4rem) !important; }
+                .masthead-photo { padding-right: clamp(0.75rem, 2vw, 1.5rem); }
+                .masthead-photo img { max-width: min(200px, 28vw); }
+                .masthead-text { padding-left: clamp(0.75rem, 2vw, 1.5rem); }
+                .masthead-heading { font-size: clamp(1.85rem, 5vw, 2.4rem) !important; }
                 .masthead-subheading { font-size: 0.92rem; }
                 .masthead-tagline { font-size: 0.68rem; letter-spacing: 0.12em; }
                 .masthead-divider { margin: 1rem 0; }
@@ -277,35 +300,43 @@
                 .skill-card { padding: 1.25rem 0.75rem; }
                 .skill-card i { font-size: 2.4rem; }
 
-                /* Activity timeline: switch to a 2-row grid so date+badge sit side-by-side
-                   on row 1 and the body spans row 2. Avoids date+badge+title collisions
-                   below ~640px without changing the existing DOM order. */
+                /* Activity timeline: 2-row grid — date + badge on row 1, body
+                   spans row 2. minmax(0, ...) lets columns shrink below their
+                   min-content, which is what stops the row from forcing a
+                   horizontal scrollbar on narrow phones (375–428px). */
                 .activity-item {
                     display: grid;
-                    grid-template-columns: auto auto;
+                    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
                     grid-template-rows: auto auto;
                     column-gap: 0.7rem;
-                    row-gap: 0.55rem;
+                    row-gap: 0.5rem;
                     padding: 1.2rem 0;
-                    align-items: center;
+                    align-items: start;
                 }
                 .activity-date {
                     width: auto;
-                    padding-top: 0;
+                    max-width: 100%;
+                    min-width: 0;
+                    padding-top: 0.15rem;
                     font-size: 0.75rem;
                     grid-column: 1;
                     grid-row: 1;
+                    white-space: nowrap;
                 }
                 .activity-badge {
                     margin-top: 0;
                     grid-column: 2;
                     grid-row: 1;
                     justify-self: start;
+                    white-space: normal;
+                    word-break: keep-all;
+                    max-width: 100%;
                 }
                 .activity-body {
                     grid-column: 1 / -1;
                     grid-row: 2;
                     min-width: 0;
+                    overflow-wrap: anywhere;
                 }
                 .activity-title { font-size: 0.95rem; }
                 .activity-desc { font-size: 0.83rem; }
@@ -364,8 +395,11 @@
                 background: transparent;
                 color: inherit;
                 transition: background 0.15s, color 0.15s;
-                min-height: 32px;
+                min-height: 44px;
                 min-width: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
             .lang-toggle:hover {
                 background: currentColor;
@@ -446,6 +480,8 @@
                 border-radius: 0;
                 background: #ffffff;
                 transition: border-color 0.15s;
+                contain: layout style;
+                overflow-wrap: anywhere;
             }
             .research-card:hover {
                 box-shadow: none;
@@ -471,6 +507,7 @@
                 border-radius: 0;
                 background: #ffffff;
                 transition: border-color 0.15s;
+                contain: layout style;
             }
             .skill-card:hover {
                 box-shadow: none;
@@ -494,23 +531,33 @@
             }
 
             /* === Activity timeline === */
-            .activity-list { list-style: none; padding: 0; max-width: 760px; margin: 0 auto; }
+            .activity-list {
+                list-style: none;
+                padding: 0;
+                max-width: 760px;
+                margin: 0 auto;
+                width: 100%;
+                contain: layout style;
+            }
             .activity-item {
                 display: flex;
                 gap: 1.2rem;
                 padding: 1.4rem 0;
                 border-bottom: 1px solid var(--rule);
                 align-items: flex-start;
+                min-width: 0;
             }
             .activity-item:last-child { border-bottom: none; }
             .activity-date {
                 flex-shrink: 0;
                 width: 6.5rem;
+                max-width: 6.5rem;
                 font-size: 0.8rem;
                 color: var(--muted);
                 padding-top: 0.15rem;
                 font-family: 'IBM Plex Mono', monospace;
                 letter-spacing: 0.02em;
+                overflow-wrap: break-word;
             }
             /* Badge: shape-based differentiation (color-blind safe per WCAG 1.4.1) */
             .activity-badge {
@@ -535,7 +582,7 @@
             .badge-article { background: transparent; color: var(--ink); }
             /* Award: accent color (single use of accent, signals importance) */
             .badge-award   { background: var(--accent); color: #ffffff; border-color: var(--accent); }
-            .activity-body { flex: 1; }
+            .activity-body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
             .activity-title {
                 font-size: 0.97rem;
                 font-weight: 600;
@@ -623,10 +670,13 @@
                 border-radius: 0 !important;
                 border: 1px solid rgba(255,255,255,0.5) !important;
                 color: #ffffff !important;
-                width: 42px;
-                height: 42px;
-                line-height: 40px;
+                width: 44px;
+                height: 44px;
+                line-height: 1;
                 padding: 0 !important;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
             .footer .btn-outline-light:hover {
                 background: #ffffff !important;
@@ -652,6 +702,52 @@
             }
             section#awards .page-section-heading { color: #ffffff !important; }
             .lead { color: var(--muted); font-size: 1rem; line-height: 1.7; }
+
+            /* === Long-form text safety: prevent overflow on narrow viewports ===
+               Japanese text does not always break at whitespace; without
+               overflow-wrap, a centered <p> renders at max-content width and
+               spills past the viewport on both sides. Apply broadly to text
+               nodes so every section stays inside its container. */
+            p, h1, h2, h3, h4, h5, h6,
+            .lead, .masthead-heading, .masthead-subheading, .masthead-tagline,
+            .masthead-text > *,
+            .research-card p, .research-card h5,
+            section#awards h5,
+            section#awards .award-meta,
+            section#awards a,
+            .activity-title,
+            .activity-desc,
+            .modal-title {
+                overflow-wrap: anywhere;
+                word-break: normal;
+                max-width: 100%;
+            }
+            .masthead-text, .research-card, .activity-body, .skill-card {
+                min-width: 0;
+            }
+
+            /* Page section heading: fluid sizing so it never gets too cramped */
+            @media (max-width: 767.98px) {
+                .page-section-heading {
+                    font-size: clamp(0.82rem, 2.6vw, 1rem) !important;
+                    letter-spacing: 0.16em !important;
+                }
+            }
+
+            /* ---- < 600px: portrait phones — extra tightening for activity rows ---- */
+            @media (max-width: 599.98px) {
+                .activity-item {
+                    grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
+                    column-gap: 0.55rem;
+                }
+                .activity-date { font-size: 0.72rem; letter-spacing: 0; }
+                .activity-badge { font-size: 0.62rem; padding: 0.18rem 0.45rem; letter-spacing: 0.08em; }
+                .masthead-tagline {
+                    font-size: 0.65rem;
+                    letter-spacing: 0.1em;
+                    overflow-wrap: anywhere;
+                }
+            }
         </style>
     </head>
     <body id="page-top">
