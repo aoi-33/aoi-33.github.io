@@ -1,0 +1,64 @@
+[
+  {
+    "date": "2026-03-17",
+    "type": "poster",
+    "url": "https://internet-of-realities.org/news/sympo/symposium2026html.html",
+    "title_ja": "JST CREST Internet of Realities 第3回シンポジウム",
+    "title_en": "JST CREST Internet of Realities 3rd Symposium",
+    "desc_ja": "JST CREST「第3回 Internet of Realities シンポジウム ―紡ぎ、繋ぐ、リアリティの未来―」にてポスター発表を行いました。",
+    "desc_en": "Presented a poster at the 3rd IoR Symposium \"Weaving, Connecting, the Future of Reality\" organized by JST CREST."
+  },
+  {
+    "date": "2025-11-26",
+    "type": "blog",
+    "url": "https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-11-26-117thMBL/",
+    "title_ja": "第117回MBL研究発表会に参加しました",
+    "title_en": "Attended the 117th MBL Workshop",
+    "desc_ja": "愛知県日間賀島で開催された第117回MBL研究発表会に参加し、研究発表を行いました。",
+    "desc_en": "Participated in the 117th MBL Workshop held in Himakajima, Aichi. Presented research results."
+  },
+  {
+    "date": "2025-09-23",
+    "type": "award",
+    "url": "https://www.365y.club/gaika/gaika2025",
+    "prize_ja": "敢闘賞",
+    "prize_en": "Fighting Spirit Award",
+    "event_ja": "第1回 全日本大学「外貨取引」選手権大会",
+    "event_en": "1st National University Foreign Exchange Trading Championship",
+    "org_ja": "365y株式会社",
+    "org_en": "365y Inc.",
+    "desc_ja": "365y株式会社主催「第1回 全日本大学『外貨取引』選手権大会」にて敢闘賞を受賞しました。",
+    "desc_en": "Received the Fighting Spirit Award at the 1st National University Foreign Exchange Trading Championship, organized by 365y Inc."
+  },
+  {
+    "date": "2025-09-20",
+    "type": "award",
+    "url": "https://www.sugiyama-u.ac.jp/univ/news/ogo7gd000000bs5v.html",
+    "prize_ja": "最優秀賞",
+    "prize_en": "Grand Prize",
+    "event_ja": "インクルーシブ・アプリ 学生ハッカソン",
+    "event_en": "Inclusive App Student Hackathon",
+    "org_ja": "椙山女学園大学",
+    "org_en": "Sugiyama Jogakuen University",
+    "desc_ja": "椙山女学園大学にて開催された「インクルーシブ・アプリ 学生ハッカソン」にて最優秀賞を受賞しました。「AI予測補完キーボード」を開発しました。",
+    "desc_en": "Received the Grand Prize at the Inclusive App Student Hackathon held at Sugiyama Jogakuen University. Developed an AI predictive input keyboard aiming for accessibility."
+  },
+  {
+    "date": "2025-09-17",
+    "type": "blog",
+    "url": "https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-09-17-MBL-UBI-CDS-ASD-2025/",
+    "title_ja": "第116回MBL・第87回UBI・第44回CDS・第33回ASD合同研究発表会に参加しました",
+    "title_en": "Attended the joint MBL/UBI/CDS/ASD workshop",
+    "desc_ja": "富山県民会館で開催されたMBL・UBI・CDS・ASD合同研究発表会に参加しました。",
+    "desc_en": "Participated in the joint MBL/UBI/CDS/ASD workshop held in Toyama."
+  },
+  {
+    "date": "2025-07-02",
+    "type": "blog",
+    "url": "https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-07-02-geoten2025/",
+    "title_ja": "ジオ展2025に参加しました",
+    "title_en": "Attended Geo-ten 2025",
+    "desc_ja": "東京で開催された地図・位置情報関連の合同展示会「ジオ展2025」に参加しました。",
+    "desc_en": "Participated in Geo-ten 2025, an exhibition on geospatial and location information technologies, held in Tokyo."
+  }
+]
