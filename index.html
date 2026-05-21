@@ -538,13 +538,21 @@
                 transform: none;
                 border-color: var(--ink);
             }
-            .skill-card i {
+            .skill-card i,
+            .skill-card img {
                 font-size: 2.8rem;
                 line-height: 1;
                 filter: grayscale(1) brightness(0.4);
                 transition: filter 0.15s;
             }
-            .skill-card:hover i { filter: grayscale(1) brightness(0); }
+            .skill-card img {
+                width: 2.8rem;
+                height: 2.8rem;
+                object-fit: contain;
+                display: block;
+            }
+            .skill-card:hover i,
+            .skill-card:hover img { filter: grayscale(1) brightness(0); }
             .skill-card span {
                 font-size: 0.78rem;
                 font-weight: 600;
@@ -784,11 +792,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#research" data-en="Research" data-ja="研究">研究</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#skills" data-en="Skills" data-ja="スキル">スキル</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activity" data-en="Activity" data-ja="活動">活動</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact" data-en="Contact" data-ja="連絡先">連絡先</a></li>
                         <li class="nav-item mx-0 mx-lg-2">
                             <button type="button" class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch to English">EN</button>
@@ -819,55 +826,23 @@
             </div>
         </header>
 
-        <!-- Research Section-->
-        <section class="page-section portfolio" id="research">
+        <!-- About Section (merged: self-intro + research)-->
+        <section class="page-section" id="about">
             <div class="container">
                 <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
-                    data-en="Research" data-ja="研究">研究</h2>
+                    data-en="About" data-ja="自己紹介">自己紹介</h2>
                 <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
                 <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <p class="lead text-center mb-5"
-                           data-en='I am a member of <a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">Kawaguchi Lab</a> at Nagoya University (Graduate School of Engineering, Dept. of Information and Communication Engineering). Our lab focuses on mobile and ubiquitous computing, aiming to build a human-friendly ubiquitous information environment.'
-                           data-ja='名古屋大学大学院 工学研究科 情報・通信工学専攻の<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。'>
-                            名古屋大学大学院 工学研究科 情報・通信工学専攻の<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。
+                    <div class="col-lg-9">
+                        <p class="lead text-center"
+                           data-en='I am Aoi Sassa, a first-year master&rsquo;s student at Nagoya University Graduate School of Engineering (Dept. of Information and Communication Engineering). I belong to <a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">Kawaguchi Lab</a>, where we work on mobile and ubiquitous computing &mdash; aiming to build a human-friendly ubiquitous information environment.'
+                           data-ja='佐々葵です。名古屋大学大学院 工学研究科 情報・通信工学専攻の修士1年として、<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。'>
+                            佐々葵です。名古屋大学大学院 工学研究科 情報・通信工学専攻の修士1年として、<a href="https://www.ucl.nuee.nagoya-u.ac.jp/" target="_blank">河口研究室</a>に所属しています。人に優しいユビキタス情報環境の実現を目指し、モバイル・ユビキタスコンピューティングの研究に取り組んでいます。
                         </p>
-                    </div>
-                </div>
-                <div class="row justify-content-center text-center">
-                    <div class="col-md-4 mb-4">
-                        <div class="research-card">
-                            <i class="fas fa-wifi fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold"
-                                data-en="Ubiquitous Computing" data-ja="ユビキタスコンピューティング">ユビキタスコンピューティング</h5>
-                            <p class="mb-0"
-                               data-en="Seamless connectivity and context-aware systems for everyday environments."
-                               data-ja="日常環境におけるシームレスな接続とコンテキストアウェアシステム。">日常環境におけるシームレスな接続とコンテキストアウェアシステム。</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="research-card">
-                            <i class="fas fa-microchip fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold"
-                                data-en="IoT &amp; Sensing" data-ja="IoT・センシング">IoT・センシング</h5>
-                            <p class="mb-0"
-                               data-en="Environmental sensing technologies and IoT platforms for smart spaces."
-                               data-ja="スマートスペースのための環境センシング技術とIoTプラットフォーム。">スマートスペースのための環境センシング技術とIoTプラットフォーム。</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <div class="research-card">
-                            <i class="fas fa-mobile-screen fa-3x text-primary mb-3"></i>
-                            <h5 class="text-uppercase fw-bold"
-                                data-en="Mobile Computing" data-ja="モバイルコンピューティング">モバイルコンピューティング</h5>
-                            <p class="mb-0"
-                               data-en="Network technologies and software platforms for mobile environments."
-                               data-ja="モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。">モバイル環境向けのネットワーク技術とソフトウェアプラットフォーム。</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -906,6 +881,30 @@
                         <div class="skill-card">
                             <i class="devicon-python-plain colored"></i>
                             <span>Python</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <i class="devicon-go-plain colored"></i>
+                            <span>Go</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <i class="devicon-azure-plain colored"></i>
+                            <span>Azure</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <img src="assets/img/claude-color.svg" alt="Claude" width="45" height="45" loading="lazy" />
+                            <span>Claude</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="skill-card">
+                            <i class="devicon-linux-plain colored"></i>
+                            <span>Linux</span>
                         </div>
                     </div>
 
@@ -1066,28 +1065,6 @@
                             <p class="mb-0 opacity-75">学会・機関名 / Conference — Year</p>
                         </div>
                         -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section-->
-        <section class="page-section bg-light" id="about">
-            <div class="container">
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
-                    data-en="About" data-ja="自己紹介">自己紹介</h2>
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <p class="lead text-center"
-                           data-en="I am Aoi Sassa, a first-year master's student at Nagoya University. I belong to Kawaguchi Laboratory, where we work on ubiquitous and mobile computing technologies to build smarter, more connected everyday environments."
-                           data-ja="佐々葵です。名古屋大学大学院 修士1年として、河口研究室でユビキタス・モバイルコンピューティングの研究に取り組んでいます。">
-                            佐々葵です。名古屋大学大学院 修士1年として、河口研究室でユビキタス・モバイルコンピューティングの研究に取り組んでいます。
-                        </p>
                     </div>
                 </div>
             </div>
