@@ -41,9 +41,12 @@
                 --rule:    #e0e0e0; /* hairlines, card borders */
                 --muted:   #595959; /* secondary text (7.0:1 AAA on white) */
                 --muted-2: #767676; /* tertiary text (4.5:1 AA on white) */
-                /* Single accent — Ink Blue (7.4:1 on white, AAA) */
-                --accent:        #0050a0;
-                --accent-hover:  #003a75;
+                /* Accent — wine red drawn from the masthead photo.
+                   Two-tone: AAA-safe on both white and ink backgrounds. */
+                --accent:               #9c243c; /* 7.69:1 on #fff (AAA) */
+                --accent-hover:         #6f1929;
+                --accent-on-dark:       #f08a9e; /* 8.7:1 on #0f0f0f (AAA) */
+                --accent-on-dark-hover: #ffb0bf;
                 /* Bootstrap variable overrides */
                 --bs-primary:        var(--ink);
                 --bs-primary-rgb:    15, 15, 15;
@@ -429,6 +432,27 @@
             }
             #mainNav .nav-link:hover,
             #mainNav .nav-link:focus { color: #ffffff !important; }
+            /* Suppress the Bootstrap theme's emerald (#1abc9c) accent on
+               navbar links and replace the scrollspy active-link "pill" with
+               a thin accent underline. */
+            #mainNav .navbar-nav li.nav-item a.nav-link:hover,
+            #mainNav .navbar-nav li.nav-item a.nav-link:focus {
+                color: #ffffff !important;
+                background: transparent !important;
+            }
+            #mainNav .navbar-nav li.nav-item a.nav-link.active,
+            #mainNav .navbar-nav > li.nav-item > a.nav-link.active,
+            #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active,
+            #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus,
+            #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
+                color: #ffffff !important;
+                background: transparent !important;
+                border-radius: 0 !important;
+                text-decoration: underline;
+                text-decoration-color: var(--accent-on-dark);
+                text-decoration-thickness: 2px;
+                text-underline-offset: 8px;
+            }
             #mainNav .navbar-toggler {
                 background: transparent !important;
                 color: #ffffff !important;
