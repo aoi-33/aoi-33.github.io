@@ -3,79 +3,503 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Aoi Sassa - M1 Student at Kawaguchi Lab, Nagoya University" />
+        <meta name="description" content="佐々葵 — 名古屋大学 河口研究室 修士1年。モバイル・ユビキタスコンピューティング研究。Aoi Sassa, M1 student at Kawaguchi Lab, Nagoya University." />
         <meta name="author" content="Aoi Sassa" />
-        <title>Aoi Sassa</title>
+        <title>Aoi Sassa（佐々葵）— 名古屋大学 河口研究室 / Ubiquitous Computing</title>
+        <link rel="canonical" href="https://aoi-33.github.io/" />
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content="Aoi Sassa（佐々葵）— Kawaguchi Lab, Nagoya University" />
+        <meta property="og:description" content="モバイル・ユビキタスコンピューティング研究 / Mobile & Ubiquitous Computing, Nagoya University." />
+        <meta property="og:url" content="https://aoi-33.github.io/" />
+        <meta property="og:image" content="https://aoi-33.github.io/assets/img/aoi.png" />
+        <meta property="og:locale" content="ja_JP" />
+        <meta property="og:locale:alternate" content="en_US" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Aoi Sassa（佐々葵）— Kawaguchi Lab, Nagoya University" />
+        <meta name="twitter:description" content="モバイル・ユビキタスコンピューティング研究 / Mobile & Ubiquitous Computing, Nagoya University." />
+        <meta name="twitter:image" content="https://aoi-33.github.io/assets/img/aoi.png" />
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- FontAwesome via CSS (not all.js) — saves ~370KB blocking JS -->
+        <link rel="preconnect" href="https://use.fontawesome.com" crossorigin />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" crossorigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css" />
         <style>
-            .masthead .masthead-avatar {
-                width: 12rem;
-                height: 12rem;
-                border-radius: 50%;
+            /* === Editorial Mono: Design tokens === */
+            :root {
+                /* Typography */
+                --bs-font-sans-serif: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+                --bs-font-monospace: 'IBM Plex Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                /* Grayscale palette (AAA-safe ramp on white) */
+                --ink:     #0f0f0f; /* primary text, dark sections */
+                --paper:   #fafafa; /* off-white background */
+                --rule:    #e0e0e0; /* hairlines, card borders */
+                --muted:   #595959; /* secondary text (7.0:1 AAA on white) */
+                --muted-2: #767676; /* tertiary text (4.5:1 AA on white) */
+                /* Single accent — Ink Blue (7.4:1 on white, AAA) */
+                --accent:        #0050a0;
+                --accent-hover:  #003a75;
+                /* Bootstrap variable overrides */
+                --bs-primary:        var(--ink);
+                --bs-primary-rgb:    15, 15, 15;
+                --bs-secondary:      var(--ink);
+                --bs-secondary-rgb:  15, 15, 15;
+                --bs-link-color:     var(--accent);
+                --bs-link-hover-color: var(--accent-hover);
+                --bs-body-color:     var(--ink);
+                --bs-body-bg:        #ffffff;
+                --bs-border-color:   var(--rule);
+            }
+            body {
+                font-family: var(--bs-font-sans-serif);
+                font-weight: 400;
+                color: var(--ink);
+                background: #ffffff;
+            }
+            h1, h2, h3, h4, h5, h6,
+            .masthead-heading, .page-section-heading {
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-weight: 600;
+                letter-spacing: 0;
+                color: var(--ink);
+            }
+            /* Bootstrap utility class overrides */
+            .text-primary   { color: var(--ink) !important; }
+            .text-secondary { color: var(--ink) !important; }
+            .bg-primary     { background-color: var(--ink) !important; }
+            .bg-secondary   { background-color: var(--ink) !important; }
+            .text-white-on-dark, .bg-primary, .bg-secondary, .bg-dark { color: #ffffff; }
+            /* Accent applied only to body links, button primary, and Award badges */
+            a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+            a:hover { color: var(--accent-hover); text-decoration-thickness: 2px; }
+            /* Navbar links should remain monochrome (override accent) */
+            .navbar a, .nav-link, .navbar-brand,
+            .activity-title a, .footer a, .masthead a,
+            section#awards a, .copyright a {
+                color: inherit;
+                text-decoration: none;
+            }
+            .activity-title a:hover { text-decoration: underline; text-underline-offset: 3px; }
+            /* Focus visible — explicit, high-contrast */
+            :focus-visible {
+                outline: 3px solid var(--accent);
+                outline-offset: 3px;
+            }
+            /* Smooth scroll anchor offset (fixed-top navbar) */
+            section[id], [id^="page"] { scroll-margin-top: 5rem; }
+
+            /* === Masthead (Split Column: photo-left, text-right) === */
+            .masthead {
+                background: #0a0a0a !important;
+                color: #ffffff;
+                padding: 6rem 0 5rem;
+            }
+            .masthead .container { max-width: 1080px; }
+            .masthead-grid {
+                display: grid;
+                grid-template-columns: minmax(140px, 38%) 1fr;
+                gap: 0;
+                align-items: stretch;
+                min-height: 260px;
+            }
+            .masthead-photo {
+                grid-column: 1; grid-row: 1;
+                border-right: 1px solid #3a3a3a;
+                padding-right: 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .masthead-photo img {
+                width: 100%;
+                max-width: 280px;
+                height: auto;
+                aspect-ratio: 1 / 1;
                 object-fit: cover;
                 object-position: center top;
-                border: 4px solid rgba(255, 255, 255, 0.4);
+                border-radius: 0 !important;
+                border: 0;
+                display: block;
             }
+            .masthead-text {
+                grid-column: 2; grid-row: 1;
+                padding-left: 2.5rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                text-align: left;
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .masthead-text > * { max-width: 100%; }
+            .masthead-photo { min-width: 0; }
+            .masthead-heading {
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                font-size: clamp(2.25rem, 4.5vw, 3.5rem) !important;
+                letter-spacing: -0.01em !important;
+                text-transform: none !important;
+                line-height: 1.05;
+                margin: 0 !important;
+            }
+            .masthead-divider {
+                width: 2.5rem;
+                height: 1px;
+                background: #3a3a3a;
+                margin: 1.25rem 0;
+                border: 0;
+            }
+            .masthead-subheading {
+                color: #b0b0b0;
+                font-family: 'IBM Plex Sans', sans-serif !important;
+                font-size: 1rem;
+                font-weight: 400;
+                letter-spacing: 0;
+                text-transform: none;
+                margin: 0 0 0.4rem;
+                text-align: left;
+            }
+            .masthead-tagline {
+                color: #787878;
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                margin: 0;
+            }
+            .masthead .divider-custom { display: none !important; }
+
+            /* Only stack on very narrow phones (< 480px). Otherwise keep 2-column. */
+            @media (max-width: 479px) {
+                .masthead { padding: 5rem 0 3.5rem; }
+                .masthead-grid {
+                    grid-template-columns: 1fr;
+                    gap: 2rem;
+                    min-height: 0;
+                }
+                .masthead-text {
+                    grid-row: 1;
+                    padding-left: 0;
+                    align-items: center;
+                    text-align: center;
+                }
+                .masthead-photo {
+                    grid-row: 2;
+                    border-right: 0;
+                    border-top: 1px solid #3a3a3a;
+                    padding: 2rem 0 0;
+                }
+                .masthead-photo img { max-width: 180px; }
+                .masthead-divider { margin: 1rem auto; }
+                .masthead-subheading, .masthead-tagline { text-align: center; }
+            }
+
+            /* === Responsive overrides (mobile-first refinements) ===
+               Breakpoint map (overrides above + below):
+                 < 480px  : single-column stacks (masthead already handled above)
+                 480–767  : keep masthead split, tighten paddings, stack timeline rows
+                 768–991  : comfortable 2-column hero, refine card paddings
+                 992+     : default desktop styles untouched
+               All interactive controls audited to ≥ 44×44px on touch sizes. */
+
+            /* ---- 480–767px: large phones / small tablets portrait ---- */
+            @media (min-width: 480px) and (max-width: 767.98px) {
+                /* Tighten the split-column hero so the text side has room to breathe */
+                .masthead { padding: 5.5rem 0 4rem; }
+                .masthead-grid {
+                    grid-template-columns: minmax(120px, 34%) 1fr;
+                    min-height: 220px;
+                }
+                .masthead-photo { padding-right: 1.5rem; }
+                .masthead-photo img { max-width: 200px; }
+                .masthead-text { padding-left: 1.5rem; }
+                .masthead-heading { font-size: clamp(1.85rem, 6vw, 2.4rem) !important; }
+                .masthead-subheading { font-size: 0.92rem; }
+                .masthead-tagline { font-size: 0.68rem; letter-spacing: 0.12em; }
+                .masthead-divider { margin: 1rem 0; }
+            }
+
+            /* ---- 768–991px: tablets (hero comfortable, cards begin to span) ---- */
+            @media (min-width: 768px) and (max-width: 991.98px) {
+                .masthead { padding: 6rem 0 4.5rem; }
+                .masthead-photo img { max-width: 240px; }
+                .masthead-heading { font-size: clamp(2rem, 5vw, 2.8rem) !important; }
+            }
+
+            /* ---- < 992px: navbar collapses; tune the mobile menu ---- */
+            @media (max-width: 991.98px) {
+                #mainNav .navbar-toggler {
+                    padding: 0.55rem 0.85rem;
+                    min-height: 44px;
+                    min-width: 44px;
+                }
+                #mainNav .navbar-collapse {
+                    margin-top: 0.5rem;
+                    border-top: 1px solid rgba(255,255,255,0.08);
+                    padding-top: 0.5rem;
+                }
+                #mainNav .navbar-nav { align-items: stretch !important; }
+                #mainNav .navbar-nav .nav-item { width: 100%; }
+                #mainNav .nav-link {
+                    padding: 0.85rem 0 !important;
+                    min-height: 44px;
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(255,255,255,0.06);
+                }
+                #mainNav .navbar-nav .nav-item:last-child .nav-link,
+                #mainNav .navbar-nav .nav-item:last-child { border-bottom: 0; }
+                #mainNav .navbar-nav .nav-item:last-child {
+                    margin: 0.75rem 0 0.25rem !important;
+                }
+                #mainNav .lang-toggle {
+                    width: auto;
+                    min-height: 44px;
+                    padding: 0.6rem 1rem;
+                    align-self: flex-start;
+                }
+            }
+
+            /* ---- < 992px: stack activity rows earlier; also research/contact/modal refinements ---- */
+            @media (max-width: 991.98px) {
+                /* Section vertical rhythm — shave a touch on mobile */
+                section.page-section { padding-top: 4rem; padding-bottom: 4rem; }
+
+                /* Page-heading sizing */
+                .page-section-heading { font-size: 0.9rem !important; letter-spacing: 0.18em !important; }
+
+                /* Research / Skills cards: a hair tighter so they sit nicely full-width */
+                .research-card { padding: 1.5rem 1.1rem; }
+                .skill-card { padding: 1.25rem 0.75rem; }
+                .skill-card i { font-size: 2.4rem; }
+
+                /* Activity timeline: switch to a 2-row grid so date+badge sit side-by-side
+                   on row 1 and the body spans row 2. Avoids date+badge+title collisions
+                   below ~640px without changing the existing DOM order. */
+                .activity-item {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto auto;
+                    column-gap: 0.7rem;
+                    row-gap: 0.55rem;
+                    padding: 1.2rem 0;
+                    align-items: center;
+                }
+                .activity-date {
+                    width: auto;
+                    padding-top: 0;
+                    font-size: 0.75rem;
+                    grid-column: 1;
+                    grid-row: 1;
+                }
+                .activity-badge {
+                    margin-top: 0;
+                    grid-column: 2;
+                    grid-row: 1;
+                    justify-self: start;
+                }
+                .activity-body {
+                    grid-column: 1 / -1;
+                    grid-row: 2;
+                    min-width: 0;
+                }
+                .activity-title { font-size: 0.95rem; }
+                .activity-desc { font-size: 0.83rem; }
+
+                /* Awards: keep readable at small widths */
+                section#awards h5 { font-size: 1rem; line-height: 1.45; }
+                section#awards .award-meta { font-size: 0.7rem; }
+
+                /* Contact buttons: full-width stacks for easy thumb reach */
+                #contact .btn-xl {
+                    display: block;
+                    width: 100%;
+                    max-width: 320px;
+                    margin-left: auto !important;
+                    margin-right: auto !important;
+                    padding: 1rem 1.5rem !important;
+                    min-height: 48px;
+                }
+                #contact .btn-xl + .btn-xl { margin-top: 0.25rem; }
+
+                /* Footer: re-center stacked columns, ensure social buttons hit 44px */
+                .footer { padding: 2.75rem 0 !important; }
+                .footer h4 { margin-bottom: 0.75rem !important; }
+                .footer .btn-outline-light {
+                    width: 44px;
+                    height: 44px;
+                    line-height: 42px;
+                    margin: 0.25rem 0.25rem !important;
+                }
+
+                /* Article modal: tighten body padding for narrow viewports */
+                .article-modal .modal-body { padding: 1.5rem 1.25rem; }
+                .article-modal .modal-body h1 { font-size: 1.25rem; }
+                .article-modal .modal-body h2 { font-size: 1.05rem; margin-top: 1.4rem; }
+            }
+
+            /* ---- < 360px: very narrow phones — last-resort tightening ---- */
+            @media (max-width: 359.98px) {
+                .masthead-heading { font-size: 1.9rem !important; }
+                .masthead-photo img { max-width: 150px; }
+                .research-card { padding: 1.25rem 1rem; }
+                .activity-date { font-size: 0.72rem; }
+                .article-modal .modal-body { padding: 1.25rem 1rem; }
+            }
+
+            /* === Language toggle (visible on dark + light backgrounds) === */
             .lang-toggle {
                 cursor: pointer;
-                font-size: 0.8rem;
-                font-weight: 700;
-                letter-spacing: 0.1em;
-                padding: 0.3rem 0.7rem;
-                border-radius: 4px;
-                border: 1px solid rgba(255,255,255,0.4);
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                letter-spacing: 0.15em;
+                padding: 0.4rem 0.8rem;
+                border-radius: 0;
+                border: 1px solid currentColor;
                 background: transparent;
-                color: #fff;
-                transition: background 0.2s;
+                color: inherit;
+                transition: background 0.15s, color 0.15s;
+                min-height: 32px;
+                min-width: 44px;
             }
-            .lang-toggle:hover { background: rgba(255,255,255,0.15); }
-            .research-card {
-                padding: 1.5rem;
-                height: 100%;
-                border: 1px solid #dee2e6;
-                border-radius: 0.5rem;
-                transition: box-shadow 0.2s;
+            .lang-toggle:hover {
+                background: currentColor;
+                color: var(--ink);
             }
-            .research-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+            .navbar .lang-toggle { color: #ffffff; }
+            .navbar .lang-toggle:hover { background: #ffffff; color: var(--ink); }
 
-            /* Skills */
+            /* === Navbar (ink, with subtle ruled bottom) === */
+            #mainNav {
+                background: var(--ink) !important;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+            }
+            #mainNav .navbar-brand {
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                color: #ffffff;
+                text-transform: none;
+            }
+            #mainNav .nav-link {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.78rem;
+                letter-spacing: 0.12em;
+                color: rgba(255,255,255,0.75) !important;
+                transition: color 0.15s;
+            }
+            #mainNav .nav-link:hover,
+            #mainNav .nav-link:focus { color: #ffffff !important; }
+            #mainNav .navbar-toggler {
+                background: transparent !important;
+                color: #ffffff !important;
+                border: 1px solid rgba(255,255,255,0.4);
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.78rem;
+                letter-spacing: 0.12em;
+            }
+
+            /* === Awards (single dark "emphasis" zone) === */
+            section#awards {
+                background: var(--ink) !important;
+                color: #ffffff;
+            }
+            section#awards .page-section-heading,
+            section#awards h5 { color: #ffffff !important; }
+            section#awards .award-meta {
+                color: #a8a8a8; /* 4.55:1 on #0f0f0f — AA */
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.78rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+            section#awards a {
+                color: #ffffff;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                text-decoration-color: rgba(255,255,255,0.4);
+            }
+            section#awards a:hover { text-decoration-color: #ffffff; }
+
+            /* === Section dividers (short ruled lines, replacing star ornament) === */
+            .divider-custom {
+                width: 2.5rem;
+                height: 2px;
+                background: var(--ink);
+                margin: 1rem auto 2.5rem;
+                display: block;
+                opacity: 1;
+            }
+            .divider-custom .divider-custom-line,
+            .divider-custom .divider-custom-icon { display: none !important; }
+            .divider-custom.divider-light { background: #ffffff; }
+            /* === Research cards (flat, ruled) === */
+            .research-card {
+                padding: 1.75rem 1.25rem;
+                height: 100%;
+                border: 1px solid var(--rule);
+                border-radius: 0;
+                background: #ffffff;
+                transition: border-color 0.15s;
+            }
+            .research-card:hover {
+                box-shadow: none;
+                border-color: var(--ink);
+            }
+            .research-card h5 {
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-weight: 600;
+                font-size: 0.85rem;
+                letter-spacing: 0.1em;
+            }
+            .research-card i { color: var(--ink) !important; }
+            .research-card p { color: var(--muted); font-size: 0.9rem; }
+
+            /* === Skill cards (flat, monochrome icons) === */
             .skill-card {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 0.6rem;
-                padding: 1.4rem 1rem;
-                border: 1px solid #dee2e6;
-                border-radius: 0.5rem;
-                transition: box-shadow 0.2s, transform 0.2s;
-                background: #fff;
+                gap: 0.7rem;
+                padding: 1.5rem 1rem;
+                border: 1px solid var(--rule);
+                border-radius: 0;
+                background: #ffffff;
+                transition: border-color 0.15s;
             }
             .skill-card:hover {
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-                transform: translateY(-3px);
+                box-shadow: none;
+                transform: none;
+                border-color: var(--ink);
             }
-            .skill-card i { font-size: 3rem; line-height: 1; }
+            .skill-card i {
+                font-size: 2.8rem;
+                line-height: 1;
+                filter: grayscale(1) brightness(0.4);
+                transition: filter 0.15s;
+            }
+            .skill-card:hover i { filter: grayscale(1) brightness(0); }
             .skill-card span {
-                font-size: 0.85rem;
-                font-weight: 700;
-                font-family: 'Montserrat', sans-serif;
-                letter-spacing: 0.04em;
+                font-size: 0.78rem;
+                font-weight: 600;
+                font-family: 'IBM Plex Mono', monospace;
+                letter-spacing: 0.12em;
                 text-transform: uppercase;
-                color: #555;
+                color: var(--ink);
             }
 
-            /* Activity timeline */
-            .activity-list { list-style: none; padding: 0; max-width: 720px; margin: 0 auto; }
+            /* === Activity timeline === */
+            .activity-list { list-style: none; padding: 0; max-width: 760px; margin: 0 auto; }
             .activity-item {
                 display: flex;
                 gap: 1.2rem;
-                padding: 1.2rem 0;
-                border-bottom: 1px solid #e9ecef;
+                padding: 1.4rem 0;
+                border-bottom: 1px solid var(--rule);
                 align-items: flex-start;
             }
             .activity-item:last-child { border-bottom: none; }
@@ -83,44 +507,151 @@
                 flex-shrink: 0;
                 width: 6.5rem;
                 font-size: 0.8rem;
-                color: #6c757d;
+                color: var(--muted);
                 padding-top: 0.15rem;
-                font-family: 'Montserrat', sans-serif;
+                font-family: 'IBM Plex Mono', monospace;
+                letter-spacing: 0.02em;
             }
+            /* Badge: shape-based differentiation (color-blind safe per WCAG 1.4.1) */
             .activity-badge {
                 flex-shrink: 0;
-                font-size: 0.7rem;
-                font-weight: 700;
-                padding: 0.2rem 0.55rem;
-                border-radius: 3px;
+                font-size: 0.68rem;
+                font-weight: 600;
+                padding: 0.25rem 0.6rem;
+                font-family: 'IBM Plex Mono', monospace;
                 text-transform: uppercase;
-                letter-spacing: 0.05em;
+                letter-spacing: 0.1em;
                 margin-top: 0.1rem;
                 white-space: nowrap;
+                border: 1px solid var(--ink);
+                background: transparent;
+                color: var(--ink);
+                border-radius: 0;
+                line-height: 1.4;
             }
-            .badge-blog { background: #e8f4fd; color: #0d6efd; }
-            .badge-article { background: #e8f8f0; color: #198754; }
-            .badge-award { background: #fff8e1; color: #e65100; }
+            /* Blog: solid filled (most common type) */
+            .badge-blog    { background: var(--ink); color: #ffffff; border-color: var(--ink); }
+            /* Article: outlined (distinct from blog by absence of fill) */
+            .badge-article { background: transparent; color: var(--ink); }
+            /* Award: accent color (single use of accent, signals importance) */
+            .badge-award   { background: var(--accent); color: #ffffff; border-color: var(--accent); }
             .activity-body { flex: 1; }
             .activity-title {
                 font-size: 0.97rem;
-                font-weight: 700;
-                margin: 0 0 0.25rem;
+                font-weight: 600;
+                margin: 0 0 0.3rem;
                 line-height: 1.4;
+                color: var(--ink);
             }
-            .activity-title a { color: inherit; text-decoration: none; }
-            .activity-title a:hover { text-decoration: underline; }
+            .activity-title a { color: var(--ink); text-decoration: none; }
+            .activity-title a:hover {
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                text-decoration-thickness: 1px;
+            }
             .activity-desc {
                 font-size: 0.85rem;
-                color: #6c757d;
+                color: var(--muted);
                 margin: 0;
-                line-height: 1.5;
+                line-height: 1.55;
             }
 
             /* Article modal */
             .article-modal .modal-body { padding: 2rem 2.5rem; line-height: 1.8; }
             .article-modal .modal-body h1 { font-size: 1.5rem; }
             .article-modal .modal-body h2 { font-size: 1.2rem; margin-top: 1.8rem; }
+            .article-modal .modal-content { border-radius: 0; border: 1px solid var(--ink); }
+
+            /* === Buttons (monochrome with shape hierarchy) === */
+            .btn-primary, .btn-secondary {
+                background: var(--ink) !important;
+                border: 1px solid var(--ink) !important;
+                color: #ffffff !important;
+                border-radius: 0 !important;
+                font-family: 'IBM Plex Sans', sans-serif;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+                text-transform: none;
+                box-shadow: none !important;
+                transition: background 0.15s, color 0.15s;
+            }
+            .btn-primary:hover, .btn-primary:focus,
+            .btn-secondary:hover, .btn-secondary:focus {
+                background: #ffffff !important;
+                color: var(--ink) !important;
+                border-color: var(--ink) !important;
+            }
+            /* Outline variant for the secondary contact button (GitHub) */
+            .btn.btn-secondary[href*="github"] {
+                background: transparent !important;
+                color: var(--ink) !important;
+            }
+            .btn.btn-secondary[href*="github"]:hover {
+                background: var(--ink) !important;
+                color: #ffffff !important;
+            }
+            .btn-xl {
+                padding: 0.9rem 1.8rem !important;
+                font-size: 0.85rem !important;
+                letter-spacing: 0.1em !important;
+                text-transform: uppercase;
+            }
+
+            /* === Section background rhythm (flat — remove bg-light tinting) === */
+            section.bg-light { background: #ffffff !important; }
+            /* Section separators (subtle hairline between sections) */
+            section.page-section + section.page-section { border-top: 1px solid var(--rule); }
+            section#awards { border-top: 0 !important; border-bottom: 0; }
+
+            /* === Footer (ink) === */
+            .footer {
+                background: var(--ink) !important;
+                color: #ffffff;
+                padding: 3.5rem 0 !important;
+            }
+            .footer h4 {
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.78rem;
+                letter-spacing: 0.15em;
+                color: #ffffff !important;
+                margin-bottom: 1rem !important;
+            }
+            .footer .lead { font-size: 0.95rem; line-height: 1.6; }
+            .footer a { color: #ffffff; text-decoration: none; }
+            .footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
+            .footer .btn-outline-light {
+                border-radius: 0 !important;
+                border: 1px solid rgba(255,255,255,0.5) !important;
+                color: #ffffff !important;
+                width: 42px;
+                height: 42px;
+                line-height: 40px;
+                padding: 0 !important;
+            }
+            .footer .btn-outline-light:hover {
+                background: #ffffff !important;
+                color: var(--ink) !important;
+                border-color: #ffffff !important;
+            }
+            /* Copyright bar (already bg-dark; reinforce) */
+            .copyright {
+                background: #050505 !important;
+                color: rgba(255,255,255,0.6) !important;
+                font-family: 'IBM Plex Mono', monospace;
+                font-size: 0.72rem;
+                letter-spacing: 0.1em;
+            }
+
+            /* Page section heading: smaller, label-like (Editorial Mono) */
+            .page-section-heading {
+                font-size: 1rem !important;
+                font-family: 'IBM Plex Mono', monospace !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.2em !important;
+                color: var(--ink) !important;
+            }
+            section#awards .page-section-heading { color: #ffffff !important; }
+            .lead { color: var(--muted); font-size: 1rem; line-height: 1.7; }
         </style>
     </head>
     <body id="page-top">
@@ -140,26 +671,31 @@
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact" data-en="Contact" data-ja="連絡先">連絡先</a></li>
                         <li class="nav-item mx-0 mx-lg-2">
-                            <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
+                            <button type="button" class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="Switch to English">EN</button>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <!-- Masthead-->
-        <header class="masthead bg-primary text-white text-center">
-            <div class="container d-flex align-items-center flex-column">
-                <img class="masthead-avatar mb-5" src="https://www.ucl.nuee.nagoya-u.ac.jp/static/05743e970806c1b851708b42550a9f43/c1d72/aoi.png" alt="Aoi Sassa" />
-                <h1 class="masthead-heading text-uppercase mb-0">Aoi Sassa</h1>
-                <div class="divider-custom divider-light">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
+        <!-- Masthead (Split Column: text left, photo right in DOM; visually photo-left on desktop)-->
+        <header class="masthead">
+            <div class="container">
+                <div class="masthead-grid">
+                    <div class="masthead-text">
+                        <h1 class="masthead-heading">Aoi Sassa</h1>
+                        <hr class="masthead-divider" aria-hidden="true" />
+                        <p class="masthead-subheading"
+                           data-en="M1 Student &mdash; Kawaguchi Lab, Nagoya University"
+                           data-ja="名古屋大学 河口研究室 修士1年">名古屋大学 河口研究室 修士1年</p>
+                        <p class="masthead-tagline"
+                           data-en="Mobile &amp; Ubiquitous Computing"
+                           data-ja="モバイル・ユビキタスコンピューティング">モバイル・ユビキタスコンピューティング</p>
+                    </div>
+                    <div class="masthead-photo">
+                        <img src="assets/img/aoi.png" alt="佐々葵 — 名古屋大学 河口研究室" width="280" height="280" fetchpriority="high" decoding="async" />
+                    </div>
                 </div>
-                <p class="masthead-subheading font-weight-light mb-0"
-                   data-en="M1 Student &mdash; Kawaguchi Lab, Nagoya University"
-                   data-ja="名古屋大学 河口研究室 修士1年">名古屋大学 河口研究室 修士1年</p>
             </div>
         </header>
 
@@ -394,14 +930,14 @@
                             <h5 class="fw-bold mb-1"
                                 data-en='Fighting Spirit Award — <a class="text-white" href="https://www.365y.club/gaika/gaika2025" target="_blank">1st National University Foreign Exchange Trading Championship</a>'
                                 data-ja='敢闘賞 — <a class="text-white" href="https://www.365y.club/gaika/gaika2025" target="_blank">第1回 全日本大学「外貨取引」選手権大会</a>'>敢闘賞 — <a class="text-white" href="https://www.365y.club/gaika/gaika2025" target="_blank">第1回 全日本大学「外貨取引」選手権大会</a></h5>
-                            <p class="mb-0 opacity-75">365y株式会社 &mdash; 2025</p>
+                            <p class="mb-0 award-meta">365y株式会社 &mdash; 2025</p>
                         </div>
 
                         <div class="mb-4">
                             <h5 class="fw-bold mb-1"
                                 data-en='Grand Prize — <a class="text-white" href="https://www.sugiyama-u.ac.jp/univ/news/ogo7gd000000bs5v.html" target="_blank">Inclusive App Student Hackathon</a>'
                                 data-ja='最優秀賞 — <a class="text-white" href="https://www.sugiyama-u.ac.jp/univ/news/ogo7gd000000bs5v.html" target="_blank">インクルーシブ・アプリ 学生ハッカソン</a>'>最優秀賞 — <a class="text-white" href="https://www.sugiyama-u.ac.jp/univ/news/ogo7gd000000bs5v.html" target="_blank">インクルーシブ・アプリ 学生ハッカソン</a></h5>
-                            <p class="mb-0 opacity-75">椙山女学園大学 &mdash; 2025</p>
+                            <p class="mb-0 award-meta">椙山女学園大学 &mdash; 2025</p>
                         </div>
 
                         <!-- 受賞を追加する場合 / To add an award:
@@ -525,7 +1061,9 @@
                 currentLang = lang;
                 localStorage.setItem(LANG_KEY, lang);
                 document.documentElement.lang = lang;
-                document.getElementById('langToggle').textContent = lang === 'ja' ? 'EN' : 'JP';
+                const btn = document.getElementById('langToggle');
+                btn.textContent = lang === 'ja' ? 'EN' : 'JP';
+                btn.setAttribute('aria-label', lang === 'ja' ? 'Switch to English' : '日本語に切り替える');
                 document.querySelectorAll('[data-en][data-ja]').forEach(el => {
                     el.innerHTML = el.getAttribute('data-' + lang);
                 });
@@ -536,6 +1074,37 @@
             }
 
             applyLang(currentLang);
+        </script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Aoi Sassa",
+            "alternateName": "佐々葵",
+            "jobTitle": "Master's Student",
+            "description": "M1 student at Kawaguchi Lab, Nagoya University. Researches mobile and ubiquitous computing.",
+            "url": "https://aoi-33.github.io/",
+            "image": "https://aoi-33.github.io/assets/img/aoi.png",
+            "email": "aoi@ucl.nuee.nagoya-u.ac.jp",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Kawaguchi Laboratory, Nagoya University",
+                "url": "https://www.ucl.nuee.nagoya-u.ac.jp/",
+                "parentOrganization": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "Nagoya University",
+                    "url": "https://www.nagoya-u.ac.jp/"
+                }
+            },
+            "sameAs": ["https://github.com/aoi-33"],
+            "knowsAbout": [
+                "Ubiquitous Computing",
+                "Mobile Computing",
+                "IoT",
+                "Context-Aware Systems",
+                "ユビキタスコンピューティング"
+            ]
+        }
         </script>
     </body>
 </html>
