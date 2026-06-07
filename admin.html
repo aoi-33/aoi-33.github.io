@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>活動エントリ管理 / Activity Editor</title>
+
+    <!-- Reuse the live site's look so the preview is faithful.
+         SRI hashes pin the CDN bytes so a tampered asset cannot run and read the
+         GitHub token from localStorage (defense against CDN supply-chain attacks). -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet"
+          integrity="sha384-nYX0jQk7JxCp1jdj3j2QdJbEJaTvTlhexnpMjwIkYQLdk9ZE3/g8CBw87XP2N0pR" crossorigin="anonymous" />
+    <link href="css/main.css" rel="stylesheet" />
+
+    <style>
+        /* Editor chrome only — not part of the public site */
+        body { background: #f3f3f3; color: var(--ink, #0f0f0f); padding-bottom: 4rem; }
+        .editor-header {
+            background: #0f0f0f; color: #fff; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+        }
+        .editor-header h1 { font-size: 1.15rem; margin: 0; font-weight: 600; }
+        .editor-header p { margin: 0.25rem 0 0; font-size: 0.8rem; opacity: 0.7; }
+        .panel {
+            background: #fff; border: 1px solid #e0e0e0; border-radius: 6px;
+            padding: 1.25rem; margin-bottom: 1.25rem;
+        }
+        .panel h2 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;
+                    color: #595959; margin-bottom: 1rem; }
+        .entry-row {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 0; border-bottom: 1px solid #eee;
+        }
+        .entry-row:last-child { border-bottom: none; }
+        .entry-row .e-date { font-family: var(--bs-font-monospace, monospace); font-size: 0.78rem;
+                             color: #595959; white-space: nowrap; }
+        .entry-row .e-type { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em;
+                             padding: 0.12rem 0.45rem; border-radius: 3px; background: #ebebeb;
+                             color: #333; white-space: nowrap; }
+        .entry-row .e-type.t-award { background: #9c243c; color: #fff; }
+        .entry-row .e-title { flex: 1; min-width: 0; font-size: 0.88rem;
+                              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .entry-row .btn { padding: 0.15rem 0.5rem; font-size: 0.78rem; }
+        .field-group { display: none; }
+        .field-group.active { display: block; }
+        label.req::after { content: " *"; color: #9c243c; }
+        .hint { font-size: 0.78rem; color: #767676; }
+        .json-out { font-family: var(--bs-font-monospace, monospace); font-size: 0.75rem;
+                    white-space: pre; height: 320px; }
+        /* Awards preview needs the dark section background to look right */
+        #awards-preview-wrap { background: #0f0f0f; border-radius: 6px; padding: 1.5rem; }
+        #awards-preview-wrap .award-meta { color: #c9c9c9; }
+    </style>
+</head>
+<body>
+    <header class="editor-header">
+        <div class="container">
+            <h1><i class="fas fa-pen-to-square me-2"></i>活動エントリ管理 / Activity Editor</h1>
+            <p>data/entries.json をブラウザ上で編集。完成したら「ダウンロード」して data/ に置き換え、commit してください。サーバ不要・GitHub Pages対応。</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row g-4">
+            <!-- LEFT: editor -->
+            <div class="col-lg-6">
+                <!-- Load -->
+                <div class="panel">
+                    <h2>1. 読み込み</h2>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <button class="btn btn-outline-dark btn-sm" id="btnReload">
+                            <i class="fas fa-rotate me-1"></i>現在の entries.json を再読込
+                        </button>
+                        <span class="text-muted small">または</span>
+                        <label class="btn btn-outline-dark btn-sm mb-0">
+                            <i class="fas fa-upload me-1"></i>ファイルを選択
+                            <input type="file" id="fileInput" accept="application/json,.json" hidden />
+                        </label>
+                    </div>
+                    <p class="hint mt-2 mb-0" id="loadStatus">— </p>
+                </div>
+
+                <!-- Entry list -->
+                <div class="panel">
+                    <h2>2. エントリ一覧 <span class="text-muted" id="entryCount"></span></h2>
+                    <div id="entryList"></div>
+                    <button class="btn btn-dark btn-sm mt-3" id="btnAdd">
+                        <i class="fas fa-plus me-1"></i>新規エントリ
+                    </button>
+                </div>
+
+                <!-- Export -->
+                <div class="panel">
+                    <h2>3. 書き出し</h2>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-dark btn-sm" id="btnDownload">
+                            <i class="fas fa-download me-1"></i>entries.json をダウンロード
+                        </button>
+                        <button class="btn btn-outline-dark btn-sm" id="btnCopy">
+                            <i class="fas fa-copy me-1"></i>JSONをコピー
+                        </button>
+                    </div>
+                    <textarea class="form-control json-out" id="jsonOut" readonly></textarea>
+                    <p class="hint mt-2 mb-0">この内容で <code>data/entries.json</code> を置き換えて commit すれば公開されます。下の「GitHubに直接保存」を使えば、この手順を自動化できます。</p>
+                </div>
+
+                <!-- GitHub direct save (optional) -->
+                <div class="panel">
+                    <h2>4. GitHubに直接保存 <span class="text-muted" style="text-transform:none;letter-spacing:0;font-size:0.78rem;">（任意）</span></h2>
+                    <p class="hint mt-0 mb-3">
+                        Fine-grained Personal Access Token を使い、<code>data/entries.json</code> をブラウザから直接コミットします。
+                        トークンは <strong>このブラウザ（localStorage）にのみ</strong> 保存され、GitHub API 以外には送信されません。
+                    </p>
+                    <div class="row g-2">
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small mb-1" for="gh-owner">owner</label>
+                            <input type="text" class="form-control form-control-sm" id="gh-owner" placeholder="aoi-33" autocomplete="off" />
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small mb-1" for="gh-repo">repo</label>
+                            <input type="text" class="form-control form-control-sm" id="gh-repo" placeholder="aoi-33.github.io" autocomplete="off" />
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small mb-1" for="gh-branch">branch</label>
+                            <input type="text" class="form-control form-control-sm" id="gh-branch" placeholder="main" autocomplete="off" />
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small mb-1" for="gh-path">path</label>
+                            <input type="text" class="form-control form-control-sm" id="gh-path" placeholder="data/entries.json" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label class="form-label small mb-1" for="gh-token">アクセストークン</label>
+                        <div class="input-group input-group-sm">
+                            <input type="password" class="form-control" id="gh-token" placeholder="github_pat_… / ghp_…" autocomplete="off" spellcheck="false" />
+                            <button class="btn btn-outline-secondary" type="button" id="btnGhToggleTok" aria-label="トークンの表示切替"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="gh-remember" />
+                            <label class="form-check-label small" for="gh-remember">このブラウザにトークンを記憶する（共用PCでは外す）</label>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label class="form-label small mb-1" for="gh-msg">コミットメッセージ</label>
+                        <input type="text" class="form-control form-control-sm" id="gh-msg" placeholder="Update activity entries" />
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button class="btn btn-dark btn-sm" id="btnGhSave">
+                            <i class="fab fa-github me-1"></i>GitHubに保存（コミット）
+                        </button>
+                        <button class="btn btn-outline-dark btn-sm" id="btnGhLoad">
+                            <i class="fas fa-cloud-arrow-down me-1"></i>GitHubから最新を読込
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" id="btnGhClear">
+                            <i class="fas fa-key me-1"></i>トークン消去
+                        </button>
+                    </div>
+                    <p class="hint mt-2 mb-2" id="gh-status">—</p>
+                    <details>
+                        <summary class="hint" style="cursor:pointer;">トークンの作り方</summary>
+                        <ol class="hint mt-2 mb-0" style="padding-left:1.2rem;">
+                            <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Fine-grained PAT 発行ページ</a>を開く</li>
+                            <li>Repository access → <em>Only select repositories</em> でこのリポジトリだけを選択</li>
+                            <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong></li>
+                            <li>発行されたトークンを上の欄に貼り付け</li>
+                        </ol>
+                        <p class="hint mt-2 mb-0">※ 権限をこのリポジトリの Contents だけに絞れば、万一漏れても被害はこのリポジトリのファイル編集に限定されます。</p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- RIGHT: preview -->
+            <div class="col-lg-6">
+                <div class="panel">
+                    <h2>プレビュー（活動）</h2>
+                    <ul class="activity-list" id="activity-list"></ul>
+                </div>
+                <div class="panel">
+                    <h2>プレビュー（受賞歴）</h2>
+                    <div id="awards-preview-wrap">
+                        <div id="awards-list" class="text-center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entry edit modal -->
+    <div class="modal fade" id="entryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">エントリ編集</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="entryForm" novalidate>
+                        <input type="hidden" id="f-index" />
+                        <div class="row g-3">
+                            <div class="col-sm-4">
+                                <label class="form-label req" for="f-date">日付</label>
+                                <input type="date" class="form-control" id="f-date" required />
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="form-label req" for="f-type">種別</label>
+                                <select class="form-select" id="f-type">
+                                    <option value="blog">研究室ブログ (blog)</option>
+                                    <option value="poster">ポスター発表 (poster)</option>
+                                    <option value="article">記事 (article)</option>
+                                    <option value="award">受賞 (award)</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="form-label" for="f-url">URL</label>
+                                <input type="text" class="form-control" id="f-url" placeholder="https://… または #articleId" />
+                            </div>
+                        </div>
+
+                        <!-- non-award fields -->
+                        <div class="field-group mt-3" data-group="normal">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label req" for="f-title_ja">タイトル(日本語)</label>
+                                    <input type="text" class="form-control" id="f-title_ja" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-title_en">タイトル(英語)</label>
+                                    <input type="text" class="form-control" id="f-title_en" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-desc_ja">説明(日本語)</label>
+                                    <textarea class="form-control" id="f-desc_ja" rows="3"></textarea>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-desc_en">説明(英語)</label>
+                                    <textarea class="form-control" id="f-desc_en" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- award fields -->
+                        <div class="field-group mt-3" data-group="award">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label req" for="f-prize_ja">賞名(日本語)</label>
+                                    <input type="text" class="form-control" id="f-prize_ja" placeholder="最優秀賞" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-prize_en">賞名(英語)</label>
+                                    <input type="text" class="form-control" id="f-prize_en" placeholder="Grand Prize" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label req" for="f-event_ja">大会・イベント名(日本語)</label>
+                                    <input type="text" class="form-control" id="f-event_ja" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-event_en">大会・イベント名(英語)</label>
+                                    <input type="text" class="form-control" id="f-event_en" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-org_ja">主催(日本語)</label>
+                                    <input type="text" class="form-control" id="f-org_ja" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-org_en">主催(英語)</label>
+                                    <input type="text" class="form-control" id="f-org_en" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-adesc_ja">説明(日本語)</label>
+                                    <textarea class="form-control" id="f-adesc_ja" rows="3"></textarea>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="f-adesc_en">説明(英語)</label>
+                                    <textarea class="form-control" id="f-adesc_en" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-danger small mt-3 mb-0" id="formError"></p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
+                    <button class="btn btn-dark" type="button" id="btnSaveEntry">この内容で保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="js/activity.js"></script>
+    <script>
+        // ---- State ----
+        let entries = [];
+        let modal;
+        // true right after a GitHub save until a fresh GitHub load: warns that the
+        // Pages CDN copy may still be stale (avoids overwriting a fresh commit).
+        let pendingPropagation = false;
+
+        const $ = id => document.getElementById(id);
+
+        // ---- Rendering ----
+        function refresh() {
+            entries = window.Activity.sortByDateDesc(entries);
+            renderList();
+            window.Activity.renderActivity(entries);
+            window.Activity.renderAwards(entries);
+            $('jsonOut').value = JSON.stringify(entries, null, 2);
+            $('entryCount').textContent = `(${entries.length}件)`;
+        }
+
+        function renderList() {
+            const list = $('entryList');
+            if (!entries.length) {
+                list.innerHTML = '<p class="text-muted small mb-0">エントリがありません。「新規エントリ」から追加してください。</p>';
+                return;
+            }
+            list.innerHTML = entries.map((e, i) => {
+                const isAward = e.type === 'award';
+                const title = isAward
+                    ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim()
+                    : (e.title_ja || '(無題)');
+                return `
+                    <div class="entry-row">
+                        <span class="e-date">${window.Activity.escapeHtml(e.date || '----')}</span>
+                        <span class="e-type ${isAward ? 't-award' : ''}">${window.Activity.escapeHtml(e.type || '')}</span>
+                        <span class="e-title">${window.Activity.escapeHtml(title)}</span>
+                        <button class="btn btn-outline-dark" data-edit="${i}"><i class="fas fa-pen"></i></button>
+                        <button class="btn btn-outline-danger" data-del="${i}"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ---- Form <-> entry ----
+        function typeIsAward() { return $('f-type').value === 'award'; }
+
+        function syncFieldGroups() {
+            const award = typeIsAward();
+            document.querySelector('[data-group="normal"]').classList.toggle('active', !award);
+            document.querySelector('[data-group="award"]').classList.toggle('active', award);
+        }
+
+        function openEditor(index) {
+            $('formError').textContent = '';
+            $('f-index').value = index;
+            const e = index >= 0 ? entries[index] : { type: 'blog', date: '' };
+            $('modalTitle').textContent = index >= 0 ? 'エントリ編集' : '新規エントリ';
+            $('f-date').value = e.date || '';
+            $('f-type').value = e.type || 'blog';
+            $('f-url').value = e.url || '';
+            // normal
+            $('f-title_ja').value = e.title_ja || '';
+            $('f-title_en').value = e.title_en || '';
+            $('f-desc_ja').value = e.desc_ja || '';
+            $('f-desc_en').value = e.desc_en || '';
+            // award
+            $('f-prize_ja').value = e.prize_ja || '';
+            $('f-prize_en').value = e.prize_en || '';
+            $('f-event_ja').value = e.event_ja || '';
+            $('f-event_en').value = e.event_en || '';
+            $('f-org_ja').value = e.org_ja || '';
+            $('f-org_en').value = e.org_en || '';
+            $('f-adesc_ja').value = e.desc_ja || '';
+            $('f-adesc_en').value = e.desc_en || '';
+            syncFieldGroups();
+            modal.show();
+        }
+
+        function collectEntry() {
+            const type = $('f-type').value;
+            const date = $('f-date').value.trim();
+            const url = $('f-url').value.trim();
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { error: '日付は YYYY-MM-DD 形式で入力してください。' };
+
+            const base = { date, type };
+            if (url) base.url = url;
+
+            if (type === 'award') {
+                if (!$('f-prize_ja').value.trim()) return { error: '受賞には賞名(日本語)が必要です。' };
+                if (!$('f-event_ja').value.trim()) return { error: '受賞には大会・イベント名(日本語)が必要です。' };
+                Object.assign(base, {
+                    prize_ja: $('f-prize_ja').value.trim(),
+                    prize_en: $('f-prize_en').value.trim(),
+                    event_ja: $('f-event_ja').value.trim(),
+                    event_en: $('f-event_en').value.trim(),
+                    org_ja:   $('f-org_ja').value.trim(),
+                    org_en:   $('f-org_en').value.trim(),
+                    desc_ja:  $('f-adesc_ja').value.trim(),
+                    desc_en:  $('f-adesc_en').value.trim(),
+                });
+            } else {
+                if (!$('f-title_ja').value.trim()) return { error: 'タイトル(日本語)が必要です。' };
+                Object.assign(base, {
+                    title_ja: $('f-title_ja').value.trim(),
+                    title_en: $('f-title_en').value.trim(),
+                    desc_ja:  $('f-desc_ja').value.trim(),
+                    desc_en:  $('f-desc_en').value.trim(),
+                });
+            }
+            return { entry: base };
+        }
+
+        function saveEntry() {
+            const { entry, error } = collectEntry();
+            if (error) { $('formError').textContent = error; return; }
+            const index = parseInt($('f-index').value, 10);
+            if (index >= 0) entries[index] = entry;
+            else entries.push(entry);
+            modal.hide();
+            refresh();
+        }
+
+        // ---- Data loading ----
+        async function loadFromServer() {
+            if (pendingPropagation &&
+                !confirm('GitHub に保存した直後です。公開サイト(CDN)はまだ古いデータを返す可能性があり、'
+                    + '再読込で上書きすると先ほどの変更を失う恐れがあります。\n\n'
+                    + '最新を取りたい場合は「GitHubから最新を読込」を使ってください。\n\nそれでも再読込しますか？')) {
+                return;
+            }
+            try {
+                const res = await fetch('data/entries.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                entries = await res.json();
+                $('loadStatus').textContent = `data/entries.json を読み込みました（${entries.length}件）。`;
+                refresh();
+            } catch (err) {
+                $('loadStatus').textContent =
+                    'data/entries.json を自動取得できませんでした（file:// で開いた場合は「ファイルを選択」で読み込んでください）。';
+            }
+        }
+
+        function loadFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const parsed = JSON.parse(reader.result);
+                    if (!Array.isArray(parsed)) throw new Error('配列ではありません');
+                    entries = parsed;
+                    $('loadStatus').textContent = `${file.name} を読み込みました（${entries.length}件）。`;
+                    refresh();
+                } catch (err) {
+                    $('loadStatus').textContent = '読み込み失敗: ' + err.message;
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ---- Export ----
+        function download() {
+            const blob = new Blob([JSON.stringify(entries, null, 2) + '\n'], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'entries.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        async function copyJson() {
+            try {
+                await navigator.clipboard.writeText($('jsonOut').value);
+                $('btnCopy').innerHTML = '<i class="fas fa-check me-1"></i>コピーしました';
+                setTimeout(() => { $('btnCopy').innerHTML = '<i class="fas fa-copy me-1"></i>JSONをコピー'; }, 1500);
+            } catch {
+                $('jsonOut').select();
+                document.execCommand('copy');
+            }
+        }
+
+        // ---- GitHub direct save (optional) ----
+        // Commits data/entries.json straight to the repo via the GitHub Contents
+        // API using a fine-grained PAT. Token lives only in this browser.
+        const GH = {
+            get owner()  { return $('gh-owner').value.trim(); },
+            get repo()   { return $('gh-repo').value.trim(); },
+            get branch() { return $('gh-branch').value.trim() || 'main'; },
+            get path()   { return $('gh-path').value.trim() || 'data/entries.json'; },
+            get token()  { return $('gh-token').value.trim(); },
+        };
+
+        // UTF-8 safe base64 (btoa alone breaks on Japanese / multibyte text).
+        function utf8ToBase64(str) {
+            const bytes = new TextEncoder().encode(str);
+            let bin = '';
+            const CHUNK = 0x8000; // avoid call-stack overflow on large arrays
+            for (let i = 0; i < bytes.length; i += CHUNK) {
+                bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+            }
+            return btoa(bin);
+        }
+        function base64ToUtf8(b64) {
+            const bin = atob(String(b64).replace(/\s/g, ''));
+            const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        }
+
+        function ghHeaders() {
+            return {
+                'Authorization': 'Bearer ' + GH.token,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+            };
+        }
+        function ghContentsUrl() {
+            const path = GH.path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+            return `https://api.github.com/repos/${encodeURIComponent(GH.owner)}/${encodeURIComponent(GH.repo)}/contents/${path}`;
+        }
+        async function ghErrorMessage(res) {
+            let msg = `HTTP ${res.status}`;
+            try { const j = await res.json(); if (j && j.message) msg += ` — ${j.message}`; } catch (_) {}
+            if (res.status === 401) msg += '（トークンが無効/期限切れ/権限不足）';
+            else if (res.status === 403) msg += '（権限不足。Contents: Read and write を確認）';
+            else if (res.status === 404) msg += '（owner / repo / branch / path を確認。トークンが対象リポジトリを含むかも確認）';
+            else if (res.status === 409 || res.status === 422) msg += '（SHAの競合。「GitHubから最新を読込」で取得し直してから再保存してください）';
+            return msg;
+        }
+
+        async function ghGetFile() {
+            const url = ghContentsUrl() + '?ref=' + encodeURIComponent(GH.branch);
+            const res = await fetch(url, { headers: ghHeaders(), cache: 'no-store' });
+            if (res.status === 404) return { exists: false, sha: null, content: null };
+            if (!res.ok) throw new Error(await ghErrorMessage(res));
+            const data = await res.json();
+            if (Array.isArray(data)) throw new Error('path がディレクトリを指しています。ファイルを指定してください。');
+            // GitHub returns content:null (use download_url) for files > 1 MB.
+            if (data.content == null) throw new Error('ファイルが大きすぎます（>1 MB）。手動編集してください。');
+            return { exists: true, sha: data.sha, content: base64ToUtf8(data.content) };
+        }
+
+        function ghStatus(msg, isError) {
+            const el = $('gh-status');
+            el.classList.toggle('text-danger', !!isError);
+            el.textContent = msg;
+        }
+        function ghStatusLink(text, link) {
+            const el = $('gh-status');
+            el.classList.remove('text-danger');
+            const safeLink = window.Activity.safeUrl(link); // block non-http(s) schemes
+            el.innerHTML = window.Activity.escapeHtml(text) + ' '
+                + `<a href="${window.Activity.escapeHtml(safeLink)}" target="_blank" rel="noopener">コミットを見る</a>`;
+        }
+
+        function ghConfigValid() {
+            if (!GH.owner || !GH.repo) { ghStatus('owner と repo を入力してください。', true); return false; }
+            if (!GH.token) { ghStatus('アクセストークンを入力してください。', true); return false; }
+            return true;
+        }
+
+        async function loadFromGitHub() {
+            if (!ghConfigValid()) return;
+            ghStatus('GitHub から読み込み中…');
+            try {
+                const f = await ghGetFile();
+                if (!f.exists) {
+                    entries = []; refresh();
+                    ghStatus('指定パスにファイルがありません。保存すると新規作成されます。');
+                    return;
+                }
+                const parsed = JSON.parse(f.content);
+                if (!Array.isArray(parsed)) throw new Error('JSON が配列ではありません');
+                entries = parsed;
+                pendingPropagation = false; // we now hold the committed HEAD
+                refresh();
+                ghStatus(`GitHub から最新を読み込みました（${entries.length}件）。`);
+                $('loadStatus').textContent = 'データは GitHub（最新コミット）から読み込み済み。';
+            } catch (e) {
+                ghStatus('読込失敗: ' + e.message, true);
+            }
+        }
+
+        async function putFile(sha) {
+            const body = {
+                message: $('gh-msg').value.trim() || 'Update activity entries',
+                content: utf8ToBase64(JSON.stringify(entries, null, 2) + '\n'),
+                branch: GH.branch,
+            };
+            if (sha) body.sha = sha;
+            return fetch(ghContentsUrl(), {
+                method: 'PUT',
+                headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+        }
+
+        async function saveToGitHub() {
+            if (!ghConfigValid()) return;
+            const btn = $('btnGhSave');
+            btn.disabled = true;
+            ghStatus('GitHub に保存中…');
+            try {
+                // Always fetch the freshest SHA right before writing to avoid 409s.
+                const f = await ghGetFile();
+                let res = await putFile(f.exists ? f.sha : undefined);
+                if (res.status === 409) {            // someone else updated it; retry once
+                    ghStatus('競合を検出しました。最新SHAを取得して再試行中…');
+                    const f2 = await ghGetFile();
+                    res = await putFile(f2.exists ? f2.sha : undefined);
+                }
+                if (!res.ok) throw new Error(await ghErrorMessage(res));
+                const data = await res.json();
+                saveGhConfig();
+                pendingPropagation = true; // live site may serve stale data for a few minutes
+                const link = data.commit && data.commit.html_url;
+                if (link) ghStatusLink('保存しました。公開サイトへの反映まで数分（最大10分程度）かかる場合があります。', link);
+                else ghStatus('保存しました。');
+            } catch (e) {
+                ghStatus('保存失敗: ' + e.message, true);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function detectRepo() {
+            const host = location.hostname;
+            if (!host.endsWith('.github.io')) return { owner: '', repo: '' };
+            const owner = host.slice(0, -('.github.io'.length));
+            const seg = location.pathname.split('/').filter(Boolean);
+            // project page: /<repo>/admin.html ; user page: /admin.html
+            const repo = (seg.length && !seg[0].includes('.')) ? seg[0] : owner + '.github.io';
+            return { owner, repo };
+        }
+
+        function saveGhConfig() {
+            localStorage.setItem('gh_owner', GH.owner);
+            localStorage.setItem('gh_repo', GH.repo);
+            localStorage.setItem('gh_branch', GH.branch);
+            localStorage.setItem('gh_path', GH.path);
+            if ($('gh-remember').checked && GH.token) localStorage.setItem('gh_token', GH.token);
+            else localStorage.removeItem('gh_token');
+        }
+
+        function loadGhConfig() {
+            const det = detectRepo();
+            $('gh-owner').value  = localStorage.getItem('gh_owner')  || det.owner || '';
+            $('gh-repo').value   = localStorage.getItem('gh_repo')   || det.repo  || '';
+            $('gh-branch').value = localStorage.getItem('gh_branch') || 'main';
+            $('gh-path').value   = localStorage.getItem('gh_path')   || 'data/entries.json';
+            const tok = localStorage.getItem('gh_token');
+            if (tok) { $('gh-token').value = tok; $('gh-remember').checked = true; }
+        }
+
+        function clearToken() {
+            localStorage.removeItem('gh_token');
+            $('gh-token').value = '';
+            $('gh-remember').checked = false;
+            ghStatus('トークンを消去しました。');
+        }
+
+        // ---- Wiring ----
+        window.addEventListener('DOMContentLoaded', () => {
+            modal = new bootstrap.Modal($('entryModal'));
+            $('f-type').addEventListener('change', syncFieldGroups);
+            $('btnAdd').addEventListener('click', () => openEditor(-1));
+            $('btnSaveEntry').addEventListener('click', saveEntry);
+            $('btnReload').addEventListener('click', loadFromServer);
+            $('btnDownload').addEventListener('click', download);
+            $('btnCopy').addEventListener('click', copyJson);
+            $('fileInput').addEventListener('change', e => { if (e.target.files[0]) loadFromFile(e.target.files[0]); });
+            $('entryList').addEventListener('click', e => {
+                const edit = e.target.closest('[data-edit]');
+                const del = e.target.closest('[data-del]');
+                if (edit) openEditor(parseInt(edit.dataset.edit, 10));
+                if (del) {
+                    const i = parseInt(del.dataset.del, 10);
+                    if (confirm('このエントリを削除しますか？\n' + (entries[i].title_ja || entries[i].event_ja || entries[i].date))) {
+                        entries.splice(i, 1);
+                        refresh();
+                    }
+                }
+            });
+
+            // GitHub direct-save wiring
+            loadGhConfig();
+            ['gh-owner', 'gh-repo', 'gh-branch', 'gh-path', 'gh-token', 'gh-remember'].forEach(id =>
+                $(id).addEventListener('change', saveGhConfig));
+            $('btnGhSave').addEventListener('click', saveToGitHub);
+            $('btnGhLoad').addEventListener('click', loadFromGitHub);
+            $('btnGhClear').addEventListener('click', clearToken);
+            $('btnGhToggleTok').addEventListener('click', () => {
+                const t = $('gh-token');
+                t.type = t.type === 'password' ? 'text' : 'password';
+                $('btnGhToggleTok').innerHTML = t.type === 'password'
+                    ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+
+            loadFromServer();
+        });
+    </script>
+</body>
+</html>
