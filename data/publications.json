@@ -1,11 +1,16 @@
 [
   {
-    "date": "2026-03-01",
+    "date": "2026-07-07",
+    "type": "international",
+    "authors": "Aoi Sassa, Haru Terashima, Naoki Tamura, Kazuyuki Shoji, Kenta Urano, Takuro Yonezawa, Tadashi Yoshikawa, Nobuo Kawaguchi",
+    "title": "Collecting Latent Local Information via Generative AI Interview System Based on Resident Background Proﬁling and Cognitive Conﬂict Theory",
+    "venue": "IEEE COMPSAC2026 - Student Research Symposium (SRS 2026)"
+  },
+  {
+    "date": "2026-06-24",
     "type": "domestic",
-    "authors": "佐々葵, 河口信夫",
-    "title": "（サンプル）ユビキタス環境におけるコンテキスト認識に関する一検討",
-    "venue": "情報処理学会 研究報告 モバイルコンピューティングと新社会システム(MBL)",
-    "extra": "Vol.2026-MBL-117, No.5, pp.1–8",
-    "url": ""
+    "authors": "佐々葵, 寺島青, 田村直樹, 庄子和之, 浦野健太, 米澤拓郎, 吉川正, 河口信夫",
+    "title": "住民属性と認知的対立理論を用いた 生成AI インタビューによる潜在的な地域情報の収集",
+    "venue": "マルチメディア、分散、協調とモバイル  DICOMO 2026 シンポジウム  Multimedia, Distributed, Cooperative, and Mobile Symposium."
   }
 ]
