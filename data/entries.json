@@ -20,7 +20,7 @@
   {
     "date": "2025-09-23",
     "type": "award",
-    "url": "https://www.365y.club/gaika/gaika2025",
+    "url": "https://www.gaika.games/gaika2025",
     "prize_ja": "敢闘賞",
     "prize_en": "Fighting Spirit Award",
     "event_ja": "第1回 全日本大学「外貨取引」選手権大会",
@@ -60,5 +60,14 @@
     "title_en": "Attended Geo-ten 2025",
     "desc_ja": "東京で開催された地図・位置情報関連の合同展示会「ジオ展2025」に参加しました。",
     "desc_en": "Participated in Geo-ten 2025, an exhibition on geospatial and location information technologies, held in Tokyo."
+  },
+  {
+    "date": "2019-08-18",
+    "type": "article",
+    "url": "https://ichinomiya-h.aichi-c.ed.jp/ssh/pdf/010903.pdf",
+    "title_ja": "「あいち高等学校男女共同参画海外派遣」の事業に参加",
+    "title_en": "Participated in the “Aichi High School Gender Equality Overseas Exchange Program”",
+    "desc_ja": "愛知県代表としオーストラリアビクトリア州メルボルンに派遣されました。現地では男女共同参画の取り組みが進む企業や団体などを訪ね日本よりも男女共同参画先進国であオーストラリアの取り組みの成果と課題を知りました。帰国後には県庁を訪問し、現地で学んだことを青山桂子副知事に報告しました。",
+    "desc_en": "I was dispatched to Melbourne, Victoria, Australia, as a representative of Aichi Prefecture. While there, I visited companies and organizations that are actively promoting gender equality and learned about the achievements and challenges of Australia’s efforts in this area, as the country is more advanced in gender equality than Japan. Upon my return, I visited the prefectural government office and reported what I had learned to Vice Governor Keiko Aoyama."
   }
 ]
