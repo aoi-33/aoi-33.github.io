@@ -688,6 +688,97 @@ section#awards a:hover { text-decoration-color: #ffffff; }
     line-height: 1.55;
 }
 
+/* === Publications list (mirrors the activity list) === */
+.publication-list {
+    list-style: none;
+    padding: 0;
+    max-width: 760px;
+    margin: 0 auto;
+    width: 100%;
+    contain: layout style;
+}
+.pub-item {
+    display: flex;
+    gap: 1.2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+    min-width: 0;
+}
+.pub-item:last-child { border-bottom: none; }
+.pub-year {
+    flex-shrink: 0;
+    width: 3.2rem;
+    max-width: 3.2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    padding-top: 0.15rem;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.02em;
+}
+/* Badge meaning is carried by its text (WCAG 1.4.1); color is enhancement only. */
+.pub-badge {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.1rem;
+    white-space: nowrap;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    line-height: 1.4;
+}
+.pub-journal { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+.pub-intl    { background: var(--ink);    color: #ffffff; border-color: var(--ink); }
+.pub-body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pub-title {
+    font-size: 0.97rem;
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+    line-height: 1.45;
+    color: var(--ink);
+}
+.pub-title a { color: var(--ink); text-decoration: none; }
+.pub-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+.pub-authors {
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin: 0 0 0.15rem;
+    line-height: 1.5;
+}
+.pub-authors strong { font-weight: 700; }
+.pub-venue {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.5;
+    font-style: italic;
+}
+@media (max-width: 991.98px) {
+    .pub-item {
+        display: grid;
+        grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        column-gap: 0.7rem;
+        row-gap: 0.5rem;
+        padding: 1.2rem 0;
+        align-items: start;
+    }
+    .pub-year  { grid-column: 1; grid-row: 1; width: auto; max-width: 100%; font-size: 0.78rem; white-space: nowrap; }
+    .pub-badge { grid-column: 2; grid-row: 1; margin-top: 0; justify-self: start; white-space: normal; word-break: keep-all; max-width: 100%; }
+    .pub-body  { grid-column: 1 / -1; grid-row: 2; min-width: 0; }
+    .pub-title { font-size: 0.95rem; }
+    .pub-authors, .pub-venue { font-size: 0.82rem; }
+}
+
 /* Article modal */
 .article-modal .modal-body { padding: 2rem 2.5rem; line-height: 1.8; }
 .article-modal .modal-body h1 { font-size: 1.5rem; }
@@ -802,12 +893,15 @@ section#awards .award-meta,
 section#awards a,
 .activity-title,
 .activity-desc,
+.pub-title,
+.pub-authors,
+.pub-venue,
 .modal-title {
     overflow-wrap: anywhere;
     word-break: normal;
     max-width: 100%;
 }
-.masthead-text, .research-card, .activity-body, .skill-card {
+.masthead-text, .research-card, .activity-body, .pub-body, .skill-card {
     min-width: 0;
 }
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>活動エントリ管理 / Activity Editor</title>
+    <title>コンテンツ管理 / Content Editor</title>
 
     <!-- Reuse the live site's look so the preview is faithful.
          SRI hashes pin the CDN bytes so a tampered asset cannot run and read the
@@ -43,8 +43,6 @@
         .entry-row .e-title { flex: 1; min-width: 0; font-size: 0.88rem;
                               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .entry-row .btn { padding: 0.15rem 0.5rem; font-size: 0.78rem; }
-        .field-group { display: none; }
-        .field-group.active { display: block; }
         label.req::after { content: " *"; color: #9c243c; }
         .hint { font-size: 0.78rem; color: #767676; }
         .json-out { font-family: var(--bs-font-monospace, monospace); font-size: 0.75rem;
@@ -57,12 +55,22 @@
 <body>
     <header class="editor-header">
         <div class="container">
-            <h1><i class="fas fa-pen-to-square me-2"></i>活動エントリ管理 / Activity Editor</h1>
-            <p>data/entries.json をブラウザ上で編集。完成したら「ダウンロード」して data/ に置き換え、commit してください。サーバ不要・GitHub Pages対応。</p>
+            <h1><i class="fas fa-pen-to-square me-2"></i>コンテンツ管理 / Content Editor</h1>
+            <p>活動 (data/entries.json) と 論文 (data/publications.json) をブラウザ上で編集。
+               「ダウンロード」して data/ に置き換え commit するか、「GitHubに直接保存」で反映。サーバ不要・GitHub Pages対応。</p>
         </div>
     </header>
 
     <div class="container">
+        <!-- Collection switcher -->
+        <div class="panel d-flex flex-wrap align-items-center gap-2">
+            <label class="form-label mb-0 me-2 fw-bold" for="collection-select">編集対象</label>
+            <select class="form-select form-select-sm" id="collection-select" style="max-width: 16rem;">
+                <option value="entries">活動 (Activity / entries.json)</option>
+                <option value="publications">論文 (Publications / publications.json)</option>
+            </select>
+        </div>
+
         <div class="row g-4">
             <!-- LEFT: editor -->
             <div class="col-lg-6">
@@ -71,7 +79,7 @@
                     <h2>1. 読み込み</h2>
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <button class="btn btn-outline-dark btn-sm" id="btnReload">
-                            <i class="fas fa-rotate me-1"></i>現在の entries.json を再読込
+                            <i class="fas fa-rotate me-1"></i>現在のファイルを再読込
                         </button>
                         <span class="text-muted small">または</span>
                         <label class="btn btn-outline-dark btn-sm mb-0">
@@ -84,10 +92,10 @@
 
                 <!-- Entry list -->
                 <div class="panel">
-                    <h2>2. エントリ一覧 <span class="text-muted" id="entryCount"></span></h2>
+                    <h2>2. 一覧 <span class="text-muted" id="entryCount"></span></h2>
                     <div id="entryList"></div>
                     <button class="btn btn-dark btn-sm mt-3" id="btnAdd">
-                        <i class="fas fa-plus me-1"></i>新規エントリ
+                        <i class="fas fa-plus me-1"></i>新規追加
                     </button>
                 </div>
 
@@ -96,21 +104,21 @@
                     <h2>3. 書き出し</h2>
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         <button class="btn btn-dark btn-sm" id="btnDownload">
-                            <i class="fas fa-download me-1"></i>entries.json をダウンロード
+                            <i class="fas fa-download me-1"></i><span id="downloadLabel">ダウンロード</span>
                         </button>
                         <button class="btn btn-outline-dark btn-sm" id="btnCopy">
                             <i class="fas fa-copy me-1"></i>JSONをコピー
                         </button>
                     </div>
                     <textarea class="form-control json-out" id="jsonOut" readonly></textarea>
-                    <p class="hint mt-2 mb-0">この内容で <code>data/entries.json</code> を置き換えて commit すれば公開されます。下の「GitHubに直接保存」を使えば、この手順を自動化できます。</p>
+                    <p class="hint mt-2 mb-0">この内容で <code id="targetPathLabel">data/entries.json</code> を置き換えて commit すれば公開されます。下の「GitHubに直接保存」で自動化も可。</p>
                 </div>
 
                 <!-- GitHub direct save (optional) -->
                 <div class="panel">
                     <h2>4. GitHubに直接保存 <span class="text-muted" style="text-transform:none;letter-spacing:0;font-size:0.78rem;">（任意）</span></h2>
                     <p class="hint mt-0 mb-3">
-                        Fine-grained Personal Access Token を使い、<code>data/entries.json</code> をブラウザから直接コミットします。
+                        Fine-grained Personal Access Token を使い、対象ファイルをブラウザから直接コミットします。
                         トークンは <strong>このブラウザ（localStorage）にのみ</strong> 保存され、GitHub API 以外には送信されません。
                     </p>
                     <div class="row g-2">
@@ -144,7 +152,7 @@
                     </div>
                     <div class="mt-2">
                         <label class="form-label small mb-1" for="gh-msg">コミットメッセージ</label>
-                        <input type="text" class="form-control form-control-sm" id="gh-msg" placeholder="Update activity entries" />
+                        <input type="text" class="form-control form-control-sm" id="gh-msg" placeholder="Update content" />
                     </div>
                     <div class="d-flex flex-wrap gap-2 mt-3">
                         <button class="btn btn-dark btn-sm" id="btnGhSave">
@@ -173,113 +181,40 @@
 
             <!-- RIGHT: preview -->
             <div class="col-lg-6">
-                <div class="panel">
-                    <h2>プレビュー（活動）</h2>
-                    <ul class="activity-list" id="activity-list"></ul>
+                <div id="preview-entries">
+                    <div class="panel">
+                        <h2>プレビュー（活動）</h2>
+                        <ul class="activity-list" id="activity-list"></ul>
+                    </div>
+                    <div class="panel">
+                        <h2>プレビュー（受賞歴）</h2>
+                        <div id="awards-preview-wrap">
+                            <div id="awards-list" class="text-center"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel">
-                    <h2>プレビュー（受賞歴）</h2>
-                    <div id="awards-preview-wrap">
-                        <div id="awards-list" class="text-center"></div>
+                <div id="preview-pubs" style="display:none;">
+                    <div class="panel">
+                        <h2>プレビュー（論文）</h2>
+                        <ul class="publication-list" id="publication-list"></ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Entry edit modal -->
-    <div class="modal fade" id="entryModal" tabindex="-1" aria-hidden="true">
+    <!-- Edit modal: the form body is generated from the active collection's schema -->
+    <div class="modal fade" id="entryModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">エントリ編集</h5>
+                    <h5 class="modal-title" id="modalTitle">編集</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="entryForm" novalidate>
-                        <input type="hidden" id="f-index" />
-                        <div class="row g-3">
-                            <div class="col-sm-4">
-                                <label class="form-label req" for="f-date">日付</label>
-                                <input type="date" class="form-control" id="f-date" required />
-                            </div>
-                            <div class="col-sm-4">
-                                <label class="form-label req" for="f-type">種別</label>
-                                <select class="form-select" id="f-type">
-                                    <option value="blog">研究室ブログ (blog)</option>
-                                    <option value="poster">ポスター発表 (poster)</option>
-                                    <option value="article">記事 (article)</option>
-                                    <option value="award">受賞 (award)</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-4">
-                                <label class="form-label" for="f-url">URL</label>
-                                <input type="text" class="form-control" id="f-url" placeholder="https://… または #articleId" />
-                            </div>
-                        </div>
-
-                        <!-- non-award fields -->
-                        <div class="field-group mt-3" data-group="normal">
-                            <div class="row g-3">
-                                <div class="col-sm-6">
-                                    <label class="form-label req" for="f-title_ja">タイトル(日本語)</label>
-                                    <input type="text" class="form-control" id="f-title_ja" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-title_en">タイトル(英語)</label>
-                                    <input type="text" class="form-control" id="f-title_en" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-desc_ja">説明(日本語)</label>
-                                    <textarea class="form-control" id="f-desc_ja" rows="3"></textarea>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-desc_en">説明(英語)</label>
-                                    <textarea class="form-control" id="f-desc_en" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- award fields -->
-                        <div class="field-group mt-3" data-group="award">
-                            <div class="row g-3">
-                                <div class="col-sm-6">
-                                    <label class="form-label req" for="f-prize_ja">賞名(日本語)</label>
-                                    <input type="text" class="form-control" id="f-prize_ja" placeholder="最優秀賞" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-prize_en">賞名(英語)</label>
-                                    <input type="text" class="form-control" id="f-prize_en" placeholder="Grand Prize" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label req" for="f-event_ja">大会・イベント名(日本語)</label>
-                                    <input type="text" class="form-control" id="f-event_ja" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-event_en">大会・イベント名(英語)</label>
-                                    <input type="text" class="form-control" id="f-event_en" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-org_ja">主催(日本語)</label>
-                                    <input type="text" class="form-control" id="f-org_ja" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-org_en">主催(英語)</label>
-                                    <input type="text" class="form-control" id="f-org_en" />
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-adesc_ja">説明(日本語)</label>
-                                    <textarea class="form-control" id="f-adesc_ja" rows="3"></textarea>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="f-adesc_en">説明(英語)</label>
-                                    <textarea class="form-control" id="f-adesc_en" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="text-danger small mt-3 mb-0" id="formError"></p>
-                    </form>
+                    <input type="hidden" id="editIndex" />
+                    <div class="row g-3" id="formFields"></div>
+                    <p class="text-danger small mt-3 mb-0" id="formError"></p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
@@ -292,146 +227,225 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="js/activity.js"></script>
+    <script src="js/publications.js"></script>
     <script>
-        // ---- State ----
-        let entries = [];
-        let modal;
-        // true right after a GitHub save until a fresh GitHub load: warns that the
-        // Pages CDN copy may still be stale (avoids overwriting a fresh commit).
-        let pendingPropagation = false;
-
         const $ = id => document.getElementById(id);
+        const esc = s => window.Activity.escapeHtml(s);
+
+        // ---- Collection definitions (schema-driven editor) ----
+        // Each field: key, label, type(text|date|textarea|select), required?, col, options?, show?(ctx)
+        const COLLECTIONS = {
+            entries: {
+                label: '活動',
+                path: 'data/entries.json',
+                fields: [
+                    { key: 'date', label: '日付', type: 'date', required: true, col: 4 },
+                    { key: 'type', label: '種別', type: 'select', col: 4, options: [
+                        { v: 'blog', ja: '研究室ブログ' }, { v: 'poster', ja: 'ポスター発表' },
+                        { v: 'article', ja: '記事' }, { v: 'award', ja: '受賞' } ] },
+                    { key: 'url', label: 'URL', type: 'text', col: 4, placeholder: 'https://… / #articleId' },
+                    { key: 'title_ja', label: 'タイトル(日)', type: 'text', required: true, col: 6, show: c => c.type !== 'award' },
+                    { key: 'title_en', label: 'タイトル(英)', type: 'text', col: 6, show: c => c.type !== 'award' },
+                    { key: 'prize_ja', label: '賞名(日)', type: 'text', required: true, col: 6, show: c => c.type === 'award' },
+                    { key: 'prize_en', label: '賞名(英)', type: 'text', col: 6, show: c => c.type === 'award' },
+                    { key: 'event_ja', label: '大会・イベント名(日)', type: 'text', required: true, col: 6, show: c => c.type === 'award' },
+                    { key: 'event_en', label: '大会・イベント名(英)', type: 'text', col: 6, show: c => c.type === 'award' },
+                    { key: 'org_ja', label: '主催(日)', type: 'text', col: 6, show: c => c.type === 'award' },
+                    { key: 'org_en', label: '主催(英)', type: 'text', col: 6, show: c => c.type === 'award' },
+                    { key: 'desc_ja', label: '説明(日)', type: 'textarea', col: 6 },
+                    { key: 'desc_en', label: '説明(英)', type: 'textarea', col: 6 },
+                ],
+                listTitle: e => e.type === 'award' ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim() : (e.title_ja || ''),
+                preview: d => { window.Activity.renderActivity(d, $('activity-list')); window.Activity.renderAwards(d, $('awards-list')); },
+            },
+            publications: {
+                label: '論文',
+                path: 'data/publications.json',
+                fields: [
+                    { key: 'date', label: '日付', type: 'date', required: true, col: 4 },
+                    { key: 'type', label: '種別', type: 'select', col: 4, options: [
+                        { v: 'journal', ja: '論文誌' }, { v: 'international', ja: '国際会議' },
+                        { v: 'domestic', ja: '国内会議' }, { v: 'poster', ja: 'ポスター' },
+                        { v: 'preprint', ja: 'プレプリント' }, { v: 'thesis', ja: '学位論文' } ] },
+                    { key: 'url', label: 'URL / DOI', type: 'text', col: 4, placeholder: 'https://doi.org/…' },
+                    { key: 'authors', label: '著者', type: 'text', required: true, col: 12, placeholder: '佐々葵, 河口信夫' },
+                    { key: 'title', label: 'タイトル', type: 'text', required: true, col: 12 },
+                    { key: 'venue', label: '掲載誌 / 会議名', type: 'text', col: 8 },
+                    { key: 'extra', label: '巻号・ページ等', type: 'text', col: 4, placeholder: 'Vol.1, pp.1–8' },
+                ],
+                listTitle: p => p.title || '',
+                preview: d => { window.Publications.render(d, $('publication-list')); },
+            },
+        };
+
+        // ---- State ----
+        let collection = 'entries';
+        let items = [];
+        let modal;
+        // Per-collection flag: true right after a GitHub save of that collection until a
+        // fresh GitHub load. Used by the manual reload button to warn that the Pages CDN
+        // copy may still be stale (avoids overwriting a fresh commit). Kept per-collection
+        // so saving "entries" never warns/blocks when working on "publications".
+        const pendingProp = { entries: false, publications: false };
+
+        function activeCol() { return COLLECTIONS[collection]; }
 
         // ---- Rendering ----
         function refresh() {
-            entries = window.Activity.sortByDateDesc(entries);
+            items = window.Activity.sortByDateDesc(items);
             renderList();
-            window.Activity.renderActivity(entries);
-            window.Activity.renderAwards(entries);
-            $('jsonOut').value = JSON.stringify(entries, null, 2);
-            $('entryCount').textContent = `(${entries.length}件)`;
+            activeCol().preview(items);
+            $('jsonOut').value = JSON.stringify(items, null, 2);
+            $('entryCount').textContent = `(${items.length}件)`;
         }
 
         function renderList() {
             const list = $('entryList');
-            if (!entries.length) {
-                list.innerHTML = '<p class="text-muted small mb-0">エントリがありません。「新規エントリ」から追加してください。</p>';
+            if (!items.length) {
+                list.innerHTML = '<p class="text-muted small mb-0">データがありません。「新規追加」から追加してください。</p>';
                 return;
             }
-            list.innerHTML = entries.map((e, i) => {
-                const isAward = e.type === 'award';
-                const title = isAward
-                    ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim()
-                    : (e.title_ja || '(無題)');
+            const col = activeCol();
+            list.innerHTML = items.map((e, i) => {
+                const title = col.listTitle(e) || '(無題)';
                 return `
                     <div class="entry-row">
-                        <span class="e-date">${window.Activity.escapeHtml(e.date || '----')}</span>
-                        <span class="e-type ${isAward ? 't-award' : ''}">${window.Activity.escapeHtml(e.type || '')}</span>
-                        <span class="e-title">${window.Activity.escapeHtml(title)}</span>
-                        <button class="btn btn-outline-dark" data-edit="${i}"><i class="fas fa-pen"></i></button>
-                        <button class="btn btn-outline-danger" data-del="${i}"><i class="fas fa-trash"></i></button>
+                        <span class="e-date">${esc(e.date || '----')}</span>
+                        <span class="e-type ${e.type === 'award' ? 't-award' : ''}">${esc(e.type || '')}</span>
+                        <span class="e-title">${esc(title)}</span>
+                        <button class="btn btn-outline-dark" data-edit="${i}" aria-label="編集"><i class="fas fa-pen"></i></button>
+                        <button class="btn btn-outline-danger" data-del="${i}" aria-label="削除"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
             }).join('');
         }
 
-        // ---- Form <-> entry ----
-        function typeIsAward() { return $('f-type').value === 'award'; }
+        // ---- Schema-driven form ----
+        function buildForm() {
+            const col = activeCol();
+            $('formFields').innerHTML = col.fields.map(f => {
+                const id = 'f-' + f.key;
+                let ctrl;
+                if (f.type === 'select') {
+                    ctrl = `<select class="form-select" id="${id}">`
+                        + f.options.map(o => `<option value="${esc(o.v)}">${esc(o.ja)} (${esc(o.v)})</option>`).join('')
+                        + `</select>`;
+                } else if (f.type === 'textarea') {
+                    ctrl = `<textarea class="form-control" id="${id}" rows="3"></textarea>`;
+                } else {
+                    const t = f.type === 'date' ? 'date' : 'text';
+                    ctrl = `<input type="${t}" class="form-control" id="${id}" ${f.placeholder ? `placeholder="${esc(f.placeholder)}"` : ''} />`;
+                }
+                return `<div class="col-sm-${f.col || 12} f-wrap" data-key="${esc(f.key)}">
+                    <label class="form-label ${f.required ? 'req' : ''}" for="${id}">${esc(f.label)}</label>
+                    ${ctrl}
+                </div>`;
+            }).join('');
+            // Re-evaluate conditional fields when the type changes
+            const typeEl = $('f-type');
+            if (typeEl) typeEl.addEventListener('change', applyConditional);
+        }
 
-        function syncFieldGroups() {
-            const award = typeIsAward();
-            document.querySelector('[data-group="normal"]').classList.toggle('active', !award);
-            document.querySelector('[data-group="award"]').classList.toggle('active', award);
+        function formCtx() {
+            const typeEl = $('f-type');
+            return { type: typeEl ? typeEl.value : undefined };
+        }
+
+        function applyConditional() {
+            const ctx = formCtx();
+            activeCol().fields.forEach(f => {
+                const wrap = document.querySelector(`.f-wrap[data-key="${f.key}"]`);
+                if (!wrap) return;
+                wrap.style.display = (f.show ? !!f.show(ctx) : true) ? '' : 'none';
+            });
         }
 
         function openEditor(index) {
             $('formError').textContent = '';
-            $('f-index').value = index;
-            const e = index >= 0 ? entries[index] : { type: 'blog', date: '' };
-            $('modalTitle').textContent = index >= 0 ? 'エントリ編集' : '新規エントリ';
-            $('f-date').value = e.date || '';
-            $('f-type').value = e.type || 'blog';
-            $('f-url').value = e.url || '';
-            // normal
-            $('f-title_ja').value = e.title_ja || '';
-            $('f-title_en').value = e.title_en || '';
-            $('f-desc_ja').value = e.desc_ja || '';
-            $('f-desc_en').value = e.desc_en || '';
-            // award
-            $('f-prize_ja').value = e.prize_ja || '';
-            $('f-prize_en').value = e.prize_en || '';
-            $('f-event_ja').value = e.event_ja || '';
-            $('f-event_en').value = e.event_en || '';
-            $('f-org_ja').value = e.org_ja || '';
-            $('f-org_en').value = e.org_en || '';
-            $('f-adesc_ja').value = e.desc_ja || '';
-            $('f-adesc_en').value = e.desc_en || '';
-            syncFieldGroups();
+            $('editIndex').value = index;
+            const item = index >= 0 ? items[index] : {};
+            $('modalTitle').textContent = (index >= 0 ? '編集' : '新規追加') + ' — ' + activeCol().label;
+            activeCol().fields.forEach(f => {
+                const el = $('f-' + f.key);
+                if (el) el.value = item[f.key] != null ? item[f.key] : '';
+            });
+            applyConditional();
             modal.show();
         }
 
         function collectEntry() {
-            const type = $('f-type').value;
-            const date = $('f-date').value.trim();
-            const url = $('f-url').value.trim();
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { error: '日付は YYYY-MM-DD 形式で入力してください。' };
-
-            const base = { date, type };
-            if (url) base.url = url;
-
-            if (type === 'award') {
-                if (!$('f-prize_ja').value.trim()) return { error: '受賞には賞名(日本語)が必要です。' };
-                if (!$('f-event_ja').value.trim()) return { error: '受賞には大会・イベント名(日本語)が必要です。' };
-                Object.assign(base, {
-                    prize_ja: $('f-prize_ja').value.trim(),
-                    prize_en: $('f-prize_en').value.trim(),
-                    event_ja: $('f-event_ja').value.trim(),
-                    event_en: $('f-event_en').value.trim(),
-                    org_ja:   $('f-org_ja').value.trim(),
-                    org_en:   $('f-org_en').value.trim(),
-                    desc_ja:  $('f-adesc_ja').value.trim(),
-                    desc_en:  $('f-adesc_en').value.trim(),
-                });
-            } else {
-                if (!$('f-title_ja').value.trim()) return { error: 'タイトル(日本語)が必要です。' };
-                Object.assign(base, {
-                    title_ja: $('f-title_ja').value.trim(),
-                    title_en: $('f-title_en').value.trim(),
-                    desc_ja:  $('f-desc_ja').value.trim(),
-                    desc_en:  $('f-desc_en').value.trim(),
-                });
+            const ctx = formCtx();
+            const out = {};
+            for (const f of activeCol().fields) {
+                const visible = f.show ? !!f.show(ctx) : true;
+                if (!visible) continue;
+                const el = $('f-' + f.key);
+                const val = (el.value || '').trim();
+                if (f.key === 'date' && !/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                    return { error: '日付は YYYY-MM-DD 形式で入力してください。' };
+                }
+                if (f.required && !val) return { error: `「${f.label}」は必須です。` };
+                // keep date/type always; otherwise omit empty optionals for cleaner JSON
+                if (val || f.key === 'date' || f.key === 'type') out[f.key] = val;
             }
-            return { entry: base };
+            return { entry: out };
         }
 
         function saveEntry() {
             const { entry, error } = collectEntry();
             if (error) { $('formError').textContent = error; return; }
-            const index = parseInt($('f-index').value, 10);
-            if (index >= 0) entries[index] = entry;
-            else entries.push(entry);
+            const index = parseInt($('editIndex').value, 10);
+            if (index >= 0) items[index] = entry;
+            else items.push(entry);
             modal.hide();
             refresh();
         }
 
+        // ---- Collection switching ----
+        function switchCollection(name) {
+            collection = name;
+            buildForm();
+            $('preview-entries').style.display = name === 'entries' ? '' : 'none';
+            $('preview-pubs').style.display = name === 'publications' ? '' : 'none';
+            $('downloadLabel').textContent = activeCol().path.split('/').pop() + ' をダウンロード';
+            $('targetPathLabel').textContent = activeCol().path;
+            $('gh-path').value = activeCol().path;
+            $('gh-path').placeholder = activeCol().path;
+            saveGhConfig();
+            // Switching always loads the target file fresh. loadFromServer() always ends by
+            // setting items + refresh(), so collection and items never split apart.
+            loadFromServer();
+        }
+
         // ---- Data loading ----
+        // Fetches the active collection's file. Always leaves items consistent with the
+        // active collection: parsed data on success, [] on failure — never the other
+        // collection's stale records.
         async function loadFromServer() {
-            if (pendingPropagation &&
-                !confirm('GitHub に保存した直後です。公開サイト(CDN)はまだ古いデータを返す可能性があり、'
+            const path = activeCol().path;
+            try {
+                const res = await fetch(path, { cache: 'no-cache' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                items = await res.json();
+                $('loadStatus').textContent = `${path} を読み込みました（${items.length}件）。`;
+            } catch (err) {
+                items = [];
+                $('loadStatus').textContent =
+                    `${path} を自動取得できませんでした（file:// で開いた場合は「ファイルを選択」で読み込んでください）。`;
+            }
+            refresh();
+        }
+
+        // Manual reload button: warns only if THIS collection was just saved to GitHub and
+        // the live CDN copy may still be stale (avoids overwriting the fresh commit).
+        function reloadFromServer() {
+            if (pendingProp[collection] &&
+                !confirm('この内容を GitHub に保存した直後です。公開サイト(CDN)はまだ古いデータを返す可能性があり、'
                     + '再読込で上書きすると先ほどの変更を失う恐れがあります。\n\n'
                     + '最新を取りたい場合は「GitHubから最新を読込」を使ってください。\n\nそれでも再読込しますか？')) {
                 return;
             }
-            try {
-                const res = await fetch('data/entries.json', { cache: 'no-cache' });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                entries = await res.json();
-                $('loadStatus').textContent = `data/entries.json を読み込みました（${entries.length}件）。`;
-                refresh();
-            } catch (err) {
-                $('loadStatus').textContent =
-                    'data/entries.json を自動取得できませんでした（file:// で開いた場合は「ファイルを選択」で読み込んでください）。';
-            }
+            loadFromServer();
         }
 
         function loadFromFile(file) {
@@ -440,8 +454,8 @@
                 try {
                     const parsed = JSON.parse(reader.result);
                     if (!Array.isArray(parsed)) throw new Error('配列ではありません');
-                    entries = parsed;
-                    $('loadStatus').textContent = `${file.name} を読み込みました（${entries.length}件）。`;
+                    items = parsed;
+                    $('loadStatus').textContent = `${file.name} を読み込みました（${items.length}件）。`;
                     refresh();
                 } catch (err) {
                     $('loadStatus').textContent = '読み込み失敗: ' + err.message;
@@ -452,10 +466,10 @@
 
         // ---- Export ----
         function download() {
-            const blob = new Blob([JSON.stringify(entries, null, 2) + '\n'], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(items, null, 2) + '\n'], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'entries.json';
+            a.download = activeCol().path.split('/').pop();
             a.click();
             URL.revokeObjectURL(a.href);
         }
@@ -472,13 +486,13 @@
         }
 
         // ---- GitHub direct save (optional) ----
-        // Commits data/entries.json straight to the repo via the GitHub Contents
+        // Commits the active data file straight to the repo via the GitHub Contents
         // API using a fine-grained PAT. Token lives only in this browser.
         const GH = {
             get owner()  { return $('gh-owner').value.trim(); },
             get repo()   { return $('gh-repo').value.trim(); },
             get branch() { return $('gh-branch').value.trim() || 'main'; },
-            get path()   { return $('gh-path').value.trim() || 'data/entries.json'; },
+            get path()   { return $('gh-path').value.trim() || activeCol().path; },
             get token()  { return $('gh-token').value.trim(); },
         };
 
@@ -540,8 +554,8 @@
             const el = $('gh-status');
             el.classList.remove('text-danger');
             const safeLink = window.Activity.safeUrl(link); // block non-http(s) schemes
-            el.innerHTML = window.Activity.escapeHtml(text) + ' '
-                + `<a href="${window.Activity.escapeHtml(safeLink)}" target="_blank" rel="noopener">コミットを見る</a>`;
+            el.innerHTML = esc(text) + ' '
+                + `<a href="${esc(safeLink)}" target="_blank" rel="noopener">コミットを見る</a>`;
         }
 
         function ghConfigValid() {
@@ -556,16 +570,16 @@
             try {
                 const f = await ghGetFile();
                 if (!f.exists) {
-                    entries = []; refresh();
+                    items = []; refresh();
                     ghStatus('指定パスにファイルがありません。保存すると新規作成されます。');
                     return;
                 }
                 const parsed = JSON.parse(f.content);
                 if (!Array.isArray(parsed)) throw new Error('JSON が配列ではありません');
-                entries = parsed;
-                pendingPropagation = false; // we now hold the committed HEAD
+                items = parsed;
+                pendingProp[collection] = false; // we now hold the committed HEAD
                 refresh();
-                ghStatus(`GitHub から最新を読み込みました（${entries.length}件）。`);
+                ghStatus(`GitHub から最新を読み込みました（${items.length}件）。`);
                 $('loadStatus').textContent = 'データは GitHub（最新コミット）から読み込み済み。';
             } catch (e) {
                 ghStatus('読込失敗: ' + e.message, true);
@@ -574,8 +588,8 @@
 
         async function putFile(sha) {
             const body = {
-                message: $('gh-msg').value.trim() || 'Update activity entries',
-                content: utf8ToBase64(JSON.stringify(entries, null, 2) + '\n'),
+                message: $('gh-msg').value.trim() || `Update ${activeCol().path.split('/').pop()}`,
+                content: utf8ToBase64(JSON.stringify(items, null, 2) + '\n'),
                 branch: GH.branch,
             };
             if (sha) body.sha = sha;
@@ -603,7 +617,7 @@
                 if (!res.ok) throw new Error(await ghErrorMessage(res));
                 const data = await res.json();
                 saveGhConfig();
-                pendingPropagation = true; // live site may serve stale data for a few minutes
+                pendingProp[collection] = true; // live site may serve stale data for a few minutes
                 const link = data.commit && data.commit.html_url;
                 if (link) ghStatusLink('保存しました。公開サイトへの反映まで数分（最大10分程度）かかる場合があります。', link);
                 else ghStatus('保存しました。');
@@ -628,7 +642,6 @@
             localStorage.setItem('gh_owner', GH.owner);
             localStorage.setItem('gh_repo', GH.repo);
             localStorage.setItem('gh_branch', GH.branch);
-            localStorage.setItem('gh_path', GH.path);
             if ($('gh-remember').checked && GH.token) localStorage.setItem('gh_token', GH.token);
             else localStorage.removeItem('gh_token');
         }
@@ -638,7 +651,6 @@
             $('gh-owner').value  = localStorage.getItem('gh_owner')  || det.owner || '';
             $('gh-repo').value   = localStorage.getItem('gh_repo')   || det.repo  || '';
             $('gh-branch').value = localStorage.getItem('gh_branch') || 'main';
-            $('gh-path').value   = localStorage.getItem('gh_path')   || 'data/entries.json';
             const tok = localStorage.getItem('gh_token');
             if (tok) { $('gh-token').value = tok; $('gh-remember').checked = true; }
         }
@@ -653,10 +665,10 @@
         // ---- Wiring ----
         window.addEventListener('DOMContentLoaded', () => {
             modal = new bootstrap.Modal($('entryModal'));
-            $('f-type').addEventListener('change', syncFieldGroups);
+            $('collection-select').addEventListener('change', e => switchCollection(e.target.value));
             $('btnAdd').addEventListener('click', () => openEditor(-1));
             $('btnSaveEntry').addEventListener('click', saveEntry);
-            $('btnReload').addEventListener('click', loadFromServer);
+            $('btnReload').addEventListener('click', reloadFromServer);
             $('btnDownload').addEventListener('click', download);
             $('btnCopy').addEventListener('click', copyJson);
             $('fileInput').addEventListener('change', e => { if (e.target.files[0]) loadFromFile(e.target.files[0]); });
@@ -666,16 +678,14 @@
                 if (edit) openEditor(parseInt(edit.dataset.edit, 10));
                 if (del) {
                     const i = parseInt(del.dataset.del, 10);
-                    if (confirm('このエントリを削除しますか？\n' + (entries[i].title_ja || entries[i].event_ja || entries[i].date))) {
-                        entries.splice(i, 1);
-                        refresh();
-                    }
+                    const label = activeCol().listTitle(items[i]) || items[i].date;
+                    if (confirm('削除しますか？\n' + label)) { items.splice(i, 1); refresh(); }
                 }
             });
 
             // GitHub direct-save wiring
             loadGhConfig();
-            ['gh-owner', 'gh-repo', 'gh-branch', 'gh-path', 'gh-token', 'gh-remember'].forEach(id =>
+            ['gh-owner', 'gh-repo', 'gh-branch', 'gh-token', 'gh-remember'].forEach(id =>
                 $(id).addEventListener('change', saveGhConfig));
             $('btnGhSave').addEventListener('click', saveToGitHub);
             $('btnGhLoad').addEventListener('click', loadFromGitHub);
@@ -687,7 +697,8 @@
                     ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
             });
 
-            loadFromServer();
+            // Initialize with the default collection
+            switchCollection('entries');
         });
     </script>
 </body>

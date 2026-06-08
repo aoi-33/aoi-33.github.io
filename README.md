@@ -6,7 +6,7 @@
 
 ```
 index.html        トップページ（マークアップのみ。CSS/JSは外部化済み）
-admin.html        活動エントリ管理ツール（ブラウザで開くだけ・サーバ不要）
+admin.html        コンテンツ管理ツール（活動／論文を切替えて編集。ブラウザで開くだけ・サーバ不要）
 css/
   main.css        サイト独自のスタイル（旧 index.html のインライン<style>を分離）
   styles.css      Bootstrap Freelancer テーマ
@@ -14,10 +14,12 @@ js/
   scripts.js      ナビバー挙動・スクロールスパイ（テーマ付属）
   i18n.js         日本語 / 英語の切り替え（data-ja / data-en を入れ替え）
   activity.js     活動・受賞の描画ロジック（index と admin で共有）
-  content.js      トップページ初期化（データ取得 → 活動/受賞/経歴を描画）
+  publications.js 論文リストの描画ロジック（index と admin で共有）
+  content.js      トップページ初期化（データ取得 → 活動/受賞/経歴/論文を描画）
 data/
-  entries.json    活動・受賞エントリ（★ ここを編集すると活動セクションが変わる）
-  history.json    経歴タイムライン
+  entries.json      活動・受賞エントリ（★ 活動セクションの情報源）
+  publications.json 論文リスト（★ 論文セクションの情報源）
+  history.json      経歴タイムライン
 assets/           画像・ファビコン
 ```
 
@@ -93,6 +95,30 @@ admin.html の「4. GitHubに直接保存」を使うと、ダウンロード→
 ```
 
 編集後は JSON として妥当か確認（末尾カンマ・引用符忘れに注意）。
+
+## 論文（Publications）の編集
+
+論文は **`data/publications.json` が情報源** です。日付の降順に自動ソートされます。
+admin.html を開き、上部の **「編集対象」を「論文」に切り替える** と、活動と同じ要領で
+追加・編集・削除・プレビュー・ダウンロード・GitHub直接保存ができます。
+
+タイトル・著者・掲載誌は **論文の言語のまま単一表記**（日英の二重入力は不要）。
+見出しと種別バッジのみ日英で切り替わります。著者欄の自分の名前（`佐々葵` / `Aoi Sassa`）は
+自動で太字になります（変更は `js/publications.js` の `SELF_NAMES`）。
+
+```jsonc
+{
+  "date": "2026-03-01",          // YYYY-MM-DD（年だけ表示に使う）
+  "type": "domestic",            // journal|international|domestic|poster|preprint|thesis
+  "authors": "佐々葵, 河口信夫",  // 著者（自分の名前は自動で太字）
+  "title": "論文タイトル",
+  "venue": "情報処理学会 研究報告 …", // 掲載誌・会議名（省略可）
+  "extra": "Vol.1, pp.1–8",      // 巻号・ページ等（省略可）
+  "url": "https://doi.org/…"     // DOI / PDF（省略可。あればタイトルがリンクになる）
+}
+```
+
+> 初期状態は「（サンプル）…」の1件が入っています。admin で本物に差し替えてください。
 
 ## 経歴（Career）の編集
 
