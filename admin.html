@@ -68,6 +68,7 @@
             <select class="form-select form-select-sm" id="collection-select" style="max-width: 16rem;">
                 <option value="entries">活動 (Activity / entries.json)</option>
                 <option value="publications">論文 (Publications / publications.json)</option>
+                <option value="products">プロダクト (Products / products.json)</option>
             </select>
         </div>
 
@@ -199,6 +200,12 @@
                         <ul class="publication-list" id="publication-list"></ul>
                     </div>
                 </div>
+                <div id="preview-products" style="display:none;">
+                    <div class="panel">
+                        <h2>プレビュー（プロダクト）</h2>
+                        <div class="row g-4 justify-content-center" id="products-list"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -228,6 +235,7 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="js/activity.js"></script>
     <script src="js/publications.js"></script>
+    <script src="js/products.js"></script>
     <script>
         const $ = id => document.getElementById(id);
         const esc = s => window.Activity.escapeHtml(s);
@@ -257,6 +265,7 @@
                 ],
                 listTitle: e => e.type === 'award' ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim() : (e.title_ja || ''),
                 preview: d => { window.Activity.renderActivity(d, $('activity-list')); window.Activity.renderAwards(d, $('awards-list')); },
+                previewWrap: 'preview-entries',
             },
             publications: {
                 label: '論文',
@@ -275,6 +284,23 @@
                 ],
                 listTitle: p => p.title || '',
                 preview: d => { window.Publications.render(d, $('publication-list')); },
+                previewWrap: 'preview-pubs',
+            },
+            products: {
+                label: 'プロダクト',
+                path: 'data/products.json',
+                fields: [
+                    { key: 'name', label: 'プロダクト名', type: 'text', required: true, col: 12, placeholder: 'My Portfolio Site' },
+                    { key: 'date', label: '日付（任意・並び順用）', type: 'date', col: 4 },
+                    { key: 'url', label: 'Demo URL', type: 'text', col: 4, placeholder: 'https://…github.io/' },
+                    { key: 'repo', label: 'GitHub URL', type: 'text', col: 4, placeholder: 'https://github.com/…' },
+                    { key: 'desc', label: '説明', type: 'textarea', col: 12 },
+                    { key: 'tags', label: '技術タグ（カンマ区切り）', type: 'text', col: 8, placeholder: 'React, Go, Azure' },
+                    { key: 'image', label: '画像パス/URL（任意）', type: 'text', col: 4, placeholder: 'assets/img/products/x.png' },
+                ],
+                listTitle: p => p.name || '',
+                preview: d => { window.Products.render(d, $('products-list')); },
+                previewWrap: 'preview-products',
             },
         };
 
@@ -286,7 +312,7 @@
         // fresh GitHub load. Used by the manual reload button to warn that the Pages CDN
         // copy may still be stale (avoids overwriting a fresh commit). Kept per-collection
         // so saving "entries" never warns/blocks when working on "publications".
-        const pendingProp = { entries: false, publications: false };
+        const pendingProp = { entries: false, publications: false, products: false };
 
         function activeCol() { return COLLECTIONS[collection]; }
 
@@ -381,12 +407,13 @@
                 if (!visible) continue;
                 const el = $('f-' + f.key);
                 const val = (el.value || '').trim();
-                if (f.key === 'date' && !/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                if (f.required && !val) return { error: `「${f.label}」は必須です。` };
+                // validate date format only when a value is present (date may be optional)
+                if (f.type === 'date' && val && !/^\d{4}-\d{2}-\d{2}$/.test(val)) {
                     return { error: '日付は YYYY-MM-DD 形式で入力してください。' };
                 }
-                if (f.required && !val) return { error: `「${f.label}」は必須です。` };
-                // keep date/type always; otherwise omit empty optionals for cleaner JSON
-                if (val || f.key === 'date' || f.key === 'type') out[f.key] = val;
+                // omit empty optionals for cleaner JSON (required fields are non-empty here)
+                if (val) out[f.key] = val;
             }
             return { entry: out };
         }
@@ -405,8 +432,8 @@
         function switchCollection(name) {
             collection = name;
             buildForm();
-            $('preview-entries').style.display = name === 'entries' ? '' : 'none';
-            $('preview-pubs').style.display = name === 'publications' ? '' : 'none';
+            Object.values(COLLECTIONS).forEach(c => { const el = $(c.previewWrap); if (el) el.style.display = 'none'; });
+            $(activeCol().previewWrap).style.display = '';
             $('downloadLabel').textContent = activeCol().path.split('/').pop() + ' をダウンロード';
             $('targetPathLabel').textContent = activeCol().path;
             $('gh-path').value = activeCol().path;

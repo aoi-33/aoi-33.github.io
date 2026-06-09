@@ -15,12 +15,16 @@ js/
   i18n.js         日本語 / 英語の切り替え（data-ja / data-en を入れ替え）
   activity.js     活動・受賞の描画ロジック（index と admin で共有）
   publications.js 論文リストの描画ロジック（index と admin で共有）
-  content.js      トップページ初期化（データ取得 → 活動/受賞/経歴/論文を描画）
+  products.js     プロダクト（カードグリッド）の描画ロジック（index と admin で共有）
+  content.js      トップページ初期化（データ取得 → 活動/受賞/経歴/論文/プロダクトを描画）
 data/
   entries.json      活動・受賞エントリ（★ 活動セクションの情報源）
   publications.json 論文リスト（★ 論文セクションの情報源）
+  products.json     プロダクト（★ プロダクトセクションの情報源）
   history.json      経歴タイムライン
-assets/           画像・ファビコン
+assets/
+  img/products/   プロダクトのサムネ画像を置く場所（任意）
+  …               その他画像・ファビコン
 ```
 
 ## 活動セクションの編集方法
@@ -119,6 +123,27 @@ admin.html を開き、上部の **「編集対象」を「論文」に切り替
 ```
 
 > 初期状態は「（サンプル）…」の1件が入っています。admin で本物に差し替えてください。
+
+## プロダクト（Products）の編集
+
+github.io などの公開プロジェクトを **カード**で並べるセクション。情報源は **`data/products.json`**。
+admin.html の「編集対象」を **「プロダクト」** に切り替えると、活動・論文と同じ要領で編集できます。
+説明は単一表記（日英切替なし）。日付は任意で、入れると新しい順、無ければ末尾に並びます。
+
+```jsonc
+{
+  "name": "My Portfolio Site",       // 必須
+  "desc": "短い説明",                 // 任意
+  "url":  "https://aoi-33.github.io/",// 任意（Demoリンク／ライブサイト）
+  "repo": "https://github.com/…",     // 任意（Codeリンク）
+  "image": "assets/img/products/x.png", // 任意（サムネ。無ければアイコン見出し）
+  "tags": "React, Go, Azure",         // 任意（カンマ区切り → タグchip）
+  "date": "2026-05-01"                // 任意（並び順のみ。YYYY-MM-DD）
+}
+```
+
+> サムネ画像は `assets/img/products/` に置いてパス指定するか、外部URLでも可。
+> 画像が無いカードはアクセント見出し＋地球アイコンにフォールバックします。
 
 ## 経歴（Career）の編集
 

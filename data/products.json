@@ -1,0 +1,11 @@
+[
+  {
+    "date": "2026-01-01",
+    "name": "（サンプル）My Portfolio Site",
+    "desc": "このサイトのようなプロダクトをここに並べます。adminで本物に差し替えてください。",
+    "url": "https://aoi-33.github.io/",
+    "repo": "https://github.com/aoi-33/aoi-33.github.io",
+    "image": "",
+    "tags": "HTML, CSS, JavaScript"
+  }
+]

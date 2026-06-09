@@ -35,12 +35,16 @@
 
     function safeUrl(url) {
         if (typeof url !== 'string') return '#';
-        return /^(https?:\/\/|#|\/)/.test(url) ? url : '#';
+        // Allow absolute http(s), in-page anchors, and root-relative paths — but NOT
+        // protocol-relative URLs (//evil.com), which would be an open redirect.
+        return /^(https?:\/\/|#|\/(?!\/))/.test(url) ? url : '#';
     }
 
     // Sort newest-first by date string (YYYY-MM-DD sorts lexically).
+    // Missing dates are treated as '' so undated items sort last (used by Products,
+    // where a date is optional). Entries/publications always have a date.
     function sortByDateDesc(entries) {
-        return [...entries].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+        return [...entries].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     }
 
     function renderActivity(entries, ul) {

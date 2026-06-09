@@ -44,6 +44,7 @@
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about" data-en="About" data-ja="自己紹介">自己紹介</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#career" data-en="Career" data-ja="経歴">経歴</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#skills" data-en="Skills" data-ja="スキル">スキル</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#products" data-en="Products" data-ja="プロダクト">プロダクト</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#publications" data-en="Publications" data-ja="論文">論文</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activity" data-en="Activity" data-ja="活動">活動</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#awards" data-en="Awards" data-ja="受賞歴">受賞歴</a></li>
@@ -183,8 +184,28 @@
             </div>
         </section>
 
+        <!-- Products Section-->
+        <section class="page-section" id="products">
+            <div class="container">
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
+                    data-en="Products" data-ja="プロダクト">プロダクト</h2>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+
+                <!-- プロダクトは data/products.json で管理。カードグリッドで表示。 -->
+                <div class="row g-4 justify-content-center" id="products-list">
+                    <noscript>
+                        <p class="text-center"><small>プロダクトの表示には JavaScript が必要です / JavaScript is required to display products.</small></p>
+                    </noscript>
+                </div>
+            </div>
+        </section>
+
         <!-- Publications Section-->
-        <section class="page-section" id="publications">
+        <section class="page-section bg-light" id="publications">
             <div class="container">
                 <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
                     data-en="Publications" data-ja="論文">論文</h2>
@@ -208,7 +229,7 @@
         </section>
 
         <!-- Activity Section-->
-        <section class="page-section bg-light" id="activity">
+        <section class="page-section" id="activity">
             <div class="container">
                 <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
                     data-en="Activity" data-ja="活動">活動</h2>
@@ -332,6 +353,7 @@
         <script src="js/i18n.js"></script>
         <script src="js/activity.js"></script>
         <script src="js/publications.js"></script>
+        <script src="js/products.js"></script>
         <script src="js/content.js"></script>
         <script type="application/ld+json">
         {

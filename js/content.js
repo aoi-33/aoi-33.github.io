@@ -62,10 +62,11 @@
 
     (async function loadAll() {
         try {
-            const [entriesRes, historyRes, pubsRes] = await Promise.all([
+            const [entriesRes, historyRes, pubsRes, productsRes] = await Promise.all([
                 fetch('data/entries.json', { cache: 'no-cache' }),
                 fetch('data/history.json', { cache: 'no-cache' }),
                 fetch('data/publications.json', { cache: 'no-cache' }),
+                fetch('data/products.json', { cache: 'no-cache' }),
             ]);
             if (entriesRes.ok) {
                 const entries = await entriesRes.json();
@@ -79,6 +80,12 @@
                 window.Publications.render(pubs);
             } else {
                 console.error('[publications] HTTP', pubsRes.status);
+            }
+            if (productsRes.ok) {
+                const products = await productsRes.json();
+                window.Products.render(products);
+            } else {
+                console.error('[products] HTTP', productsRes.status);
             }
             if (historyRes.ok) {
                 const history = await historyRes.json();
