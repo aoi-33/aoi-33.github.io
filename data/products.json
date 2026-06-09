@@ -5,7 +5,6 @@
     "desc": "指定期間の曜日ごとの祝日数・平日数を集計するWebツール。",
     "url": "https://aoi-33.github.io/toy-holiday-counter/",
     "repo": "https://github.com/aoi-33/toy-holiday-counter",
-    "image": "",
     "tags": "JavaScript"
   },
   {
@@ -14,7 +13,6 @@
     "desc": "音声をテキストに変換するWebツール。",
     "url": "https://aoi-33.github.io/toy-speech2text/",
     "repo": "https://github.com/aoi-33/toy-speech2text",
-    "image": "",
     "tags": "JavaScript"
   },
   {
@@ -23,7 +21,6 @@
     "desc": "コーヒー豆を学べる学習・クイズ静的サイト。",
     "url": "https://aoi-33.github.io/toy-black-coffee/",
     "repo": "https://github.com/aoi-33/toy-black-coffee",
-    "image": "",
     "tags": "React, Vite, MUI"
   },
   {
@@ -32,7 +29,6 @@
     "desc": "テキストの文字数を数えるWebツール。",
     "url": "https://aoi-33.github.io/toy-char-counter/",
     "repo": "https://github.com/aoi-33/toy-char-counter",
-    "image": "",
     "tags": "HTML"
   },
   {
@@ -41,7 +37,6 @@
     "desc": "麻雀の「待ち」を当てるクイズ。",
     "url": "https://aoi-33.github.io/toy-mahjong-machi-quiz/",
     "repo": "https://github.com/aoi-33/toy-mahjong-machi-quiz",
-    "image": "",
     "tags": "TypeScript"
   }
 ]

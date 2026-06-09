@@ -22,9 +22,7 @@ data/
   publications.json 論文リスト（★ 論文セクションの情報源）
   products.json     プロダクト（★ プロダクトセクションの情報源）
   history.json      経歴タイムライン
-assets/
-  img/products/   プロダクトのサムネ画像を置く場所（任意）
-  …               その他画像・ファビコン
+assets/           画像・ファビコン
 ```
 
 ## 活動セクションの編集方法
@@ -134,16 +132,15 @@ admin.html の「編集対象」を **「プロダクト」** に切り替える
 {
   "name": "My Portfolio Site",       // 必須
   "desc": "短い説明",                 // 任意
-  "url":  "https://aoi-33.github.io/",// 任意（Demoリンク／ライブサイト）
+  "url":  "https://aoi-33.github.io/",// 任意（Demoリンク／ライブサイト。タイトルのリンク先にもなる）
   "repo": "https://github.com/…",     // 任意（Codeリンク）
-  "image": "assets/img/products/x.png", // 任意（サムネ。無ければアイコン見出し）
   "tags": "React, Go, Azure",         // 任意（カンマ区切り → タグchip）
   "date": "2026-05-01"                // 任意（並び順のみ。YYYY-MM-DD）
 }
 ```
 
-> サムネ画像は `assets/img/products/` に置いてパス指定するか、外部URLでも可。
-> 画像が無いカードはアクセント見出し＋地球アイコンにフォールバックします。
+> カードは画像なしのテキスト主体デザイン（タイトル＋説明＋タグ＋Demo/Codeリンク）。
+> タイトルは url（無ければ repo）へのリンクになります。
 
 ## 経歴（Career）の編集
 

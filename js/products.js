@@ -10,11 +10,10 @@
  *     "desc":  "Short description",   // optional (single language)
  *     "url":   "https://…",           // optional — "Demo" link / live site
  *     "repo":  "https://github.com/…",// optional — "Code" link
- *     "image": "assets/img/products/x.png" or "https://…", // optional thumbnail
  *     "tags":  "React, Go, Azure",    // optional — comma-separated
  *     "date":  "YYYY-MM-DD"           // optional — used only for ordering
  *   }
- * Cards with no image show an accent header with a globe icon.
+ * Image-free editorial cards: title (links to demo/repo) + description + tags + links.
  */
 (function (global) {
     'use strict';
@@ -40,25 +39,22 @@
         if (!el) return;
         el.innerHTML = A.sortByDateDesc(products).map(p => {
             const name = esc(p.name || '');
-            // img src: relative paths are allowed (escaped for the attribute);
-            // javascript: in an <img src> does not execute, so escaping is sufficient.
-            const img = typeof p.image === 'string' ? p.image.trim() : '';
-            const thumb = img
-                ? `<div class="product-thumb"><img src="${esc(img)}" alt="${name}" loading="lazy" /></div>`
-                : `<div class="product-thumb product-thumb-fallback" aria-hidden="true"><i class="fas fa-globe"></i></div>`;
+            // Title links to the demo, or the repo if there is no demo.
+            const primary = safeUrl(p.url) !== '#' ? safeUrl(p.url)
+                          : (safeUrl(p.repo) !== '#' ? safeUrl(p.repo) : '');
+            const title = primary
+                ? `<a href="${esc(primary)}" target="_blank" rel="noopener">${name}</a>`
+                : name;
             const tags = tagList(p.tags).map(t => `<span class="product-tag">${esc(t)}</span>`).join('');
             const demo = linkButton(p.url, 'fas fa-arrow-up-right-from-square', 'Demo');
             const repo = linkButton(p.repo, 'fab fa-github', 'Code');
             return `
                 <div class="col-12 col-sm-6 col-lg-4">
                     <article class="product-card">
-                        ${thumb}
-                        <div class="product-card-body">
-                            <h3 class="product-name">${name}</h3>
-                            ${p.desc ? `<p class="product-desc">${esc(p.desc)}</p>` : ''}
-                            ${tags ? `<div class="product-tags">${tags}</div>` : ''}
-                            ${(demo || repo) ? `<div class="product-links">${demo}${repo}</div>` : ''}
-                        </div>
+                        <h3 class="product-name">${title}</h3>
+                        ${p.desc ? `<p class="product-desc">${esc(p.desc)}</p>` : ''}
+                        ${tags ? `<div class="product-tags">${tags}</div>` : ''}
+                        ${(demo || repo) ? `<div class="product-links">${demo}${repo}</div>` : ''}
                     </article>
                 </div>
             `;
