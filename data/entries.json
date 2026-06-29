@@ -22,6 +22,15 @@
     "desc_en": "Presented a poster at the 3rd IoR Symposium \"Weaving, Connecting, the Future of Reality\" organized by JST CREST."
   },
   {
+    "date": "2026-03-09",
+    "type": "blog",
+    "url": "https://www.ucl.nuee.nagoya-u.ac.jp/blog/2026/2026-03-09-NLP/",
+    "title_ja": "言語処理学会第32回年次大会（NLP2026）にてポスター発表を行いました",
+    "title_en": "I attended the 32nd Annual Conference of the Japanese Society for Natural Language Processing (NLP2026) and gave a poster presentation.",
+    "desc_ja": "LLM-jpチューニングコンペティション2026のワークショップが開催され、数学タスク部門にて出場しポスター発表を行いました。",
+    "desc_en": "A workshop for the LLM-jp Tuning Competition 2026 was held, and I participated in the Mathematics Task category and gave a poster presentation."
+  },
+  {
     "date": "2025-11-26",
     "type": "blog",
     "url": "https://www.ucl.nuee.nagoya-u.ac.jp/blog/2025/2025-11-26-117thMBL/",
