@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-06-24",
+    "type": "award",
+    "url": "https://dicomo.org/commendation/",
+    "prize_ja": "ヤングリサーチャー賞",
+    "prize_en": "IPSJ Young Researcher Award",
+    "event_ja": "DICOMO2026",
+    "event_en": "DICOMO2026",
+    "org_ja": "情報処理学会",
+    "org_en": "nformation Processing Society of Japan (IPSJ)",
+    "desc_ja": "「住民属性と認知的対立理論を用いた 生成AIインタビューによる潜在的な地域情報の収集」というタイトルで口頭発表を行い、ヤングリサーチャ賞（プレゼンテーションが優れていると感じた30歳未満の発表者に与えられる賞）を受賞しました！",
+    "desc_en": "I gave an oral presentation titled “Collecting Latent Local Information Through Generative AI Interviews Using Resident Attributes and Cognitive Conflict Theory” and won the Young Researcher Award (an award given to presenters under the age of 30 whose presentations are deemed outstanding)!"
+  },
+  {
     "date": "2026-03-17",
     "type": "poster",
     "url": "https://internet-of-realities.org/news/sympo/symposium2026html.html",
