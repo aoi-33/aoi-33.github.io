@@ -854,20 +854,46 @@ section#awards a:hover { text-decoration-color: #ffffff; }
     color: var(--ink) !important;
     border-color: var(--ink) !important;
 }
-/* Outline variant for the secondary contact button (GitHub) */
-.btn.btn-secondary[href*="github"] {
-    background: transparent !important;
-    color: var(--ink) !important;
-}
-.btn.btn-secondary[href*="github"]:hover {
-    background: var(--ink) !important;
-    color: #ffffff !important;
-}
 .btn-xl {
     padding: 0.9rem 1.8rem !important;
     font-size: 0.85rem !important;
     letter-spacing: 0.1em !important;
     text-transform: uppercase;
+}
+
+/* === Contact: service links (outline tiles, same shape as buttons) === */
+.contact-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    max-width: 520px;
+    margin: 0 auto;
+}
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: #ffffff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+.contact-link i { font-size: 1.05rem; }
+.contact-link:hover, .contact-link:focus-visible {
+    background: var(--ink);
+    color: #ffffff;
+}
+/* Single column on phones: match the 320px Email button's edges */
+@media (max-width: 575.98px) {
+    .contact-links { grid-template-columns: 1fr; max-width: 320px; }
 }
 
 /* === Section background rhythm (flat — remove bg-light tinting) === */
