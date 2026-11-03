@@ -10,6 +10,8 @@
  *     "date": "YYYY-MM-DD",
  *     "type": "blog" | "poster" | "article" | "award",
  *     "url":  "https://..."  or  "#articleId" (opens a modal),
+ *     "fallback_url": "https://web.archive.org/...",  // optional backup copy
+ *     "use_fallback": "true",  // optional; set when "url" is dead to link the backup
  *     // non-award entries:
  *     "title_ja", "title_en", "desc_ja", "desc_en"
  *     // award entries instead use:
@@ -40,6 +42,14 @@
         return /^(https?:\/\/|#|\/(?!\/))/.test(url) ? url : '#';
     }
 
+    // Link target for an entry: the original URL, or its backup copy once the
+    // original is marked dead with use_fallback (switched by hand — a cross-origin
+    // 404 cannot be detected reliably from the browser).
+    function entryUrl(e) {
+        const useFallback = (e.use_fallback === true || e.use_fallback === 'true') && e.fallback_url;
+        return safeUrl(useFallback ? e.fallback_url : e.url);
+    }
+
     // Sort newest-first by date string (YYYY-MM-DD sorts lexically).
     // Missing dates are treated as '' so undated items sort last (used by Products,
     // where a date is optional). Entries/publications always have a date.
@@ -55,7 +65,7 @@
             const isAward = e.type === 'award';
             const titleJa = isAward ? `${e.event_ja ?? ''} ${e.prize_ja ?? ''}`.trim() : (e.title_ja || '');
             const titleEn = isAward ? `${e.event_en ?? ''} ${e.prize_en ?? ''}`.trim() : (e.title_en || '');
-            const url = safeUrl(e.url);
+            const url = entryUrl(e);
             const isModal = url.startsWith('#');
             const linkAttrs = isModal
                 ? `href="${escapeHtml(url)}" data-bs-toggle="modal" data-bs-target="${escapeHtml(url)}"`
@@ -79,7 +89,7 @@
         const awards = sortByDateDesc(entries.filter(e => e.type === 'award'));
         container.innerHTML = awards.map(e => {
             const year = (e.date || '').split('-')[0] || '';
-            const url = safeUrl(e.url);
+            const url = entryUrl(e);
             const linkJa = `<a class="text-white" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(e.event_ja)}</a>`;
             const linkEn = `<a class="text-white" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(e.event_en)}</a>`;
             const titleJa = `${escapeHtml(e.prize_ja)} &mdash; ${linkJa}`;
@@ -95,5 +105,5 @@
         }).join('');
     }
 
-    global.Activity = { TYPE_META, escapeHtml, safeUrl, sortByDateDesc, renderActivity, renderAwards };
+    global.Activity = { TYPE_META, escapeHtml, safeUrl, entryUrl, sortByDateDesc, renderActivity, renderAwards };
 })(window);

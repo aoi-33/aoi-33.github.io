@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
     <link href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" rel="stylesheet"
-          integrity="sha384-nYX0jQk7JxCp1jdj3j2QdJbEJaTvTlhexnpMjwIkYQLdk9ZE3/g8CBw87XP2N0pR" crossorigin="anonymous" />
+          integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous" />
     <link href="css/main.css" rel="stylesheet" />
 
     <style>
@@ -252,6 +252,9 @@
                         { v: 'blog', ja: '研究室ブログ' }, { v: 'poster', ja: 'ポスター発表' },
                         { v: 'article', ja: '記事' }, { v: 'award', ja: '受賞' } ] },
                     { key: 'url', label: 'URL', type: 'text', col: 4, placeholder: 'https://… / #articleId' },
+                    { key: 'fallback_url', label: '控えURL(任意)', type: 'text', col: 8, placeholder: 'https://web.archive.org/…' },
+                    { key: 'use_fallback', label: 'リンク先', type: 'select', col: 4, options: [
+                        { v: '', ja: '元のURL' }, { v: 'true', ja: '控えURL' } ] },
                     { key: 'title_ja', label: 'タイトル(日)', type: 'text', required: true, col: 6, show: c => c.type !== 'award' },
                     { key: 'title_en', label: 'タイトル(英)', type: 'text', col: 6, show: c => c.type !== 'award' },
                     { key: 'prize_ja', label: '賞名(日)', type: 'text', required: true, col: 6, show: c => c.type === 'award' },
