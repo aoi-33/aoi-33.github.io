@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-20",
+    "type": "award",
+    "url": "https://www.tmi.mirai.nagoya-u.ac.jp/contents/post-5146/",
+    "prize_ja": "最優秀プレゼンテーション賞",
+    "prize_en": "Best Presentation Award",
+    "event_ja": "第6回超学際移動イノベーションシンポジウム",
+    "event_en": "6th Transdisciplinary Mobility Innovation Symposium",
+    "org_ja": "名古屋大学 TMI卓越大学院プログラム",
+    "org_en": "Nagoya University TMI Graduate Program",
+    "desc_ja": "第6回超学際移動イノベーションシンポジウム「スマートモビリティの社会実装に向けて」にて、最優秀プレゼンテーション賞を受賞しました。",
+    "desc_en": "Received the Best Presentation Award at the 6th Transdisciplinary Mobility Innovation Symposium, themed “Toward the Social Implementation of Smart Mobility.”"
+  },
+  {
     "date": "2026-06-24",
     "type": "award",
     "url": "https://dicomo.org/commendation/",
