@@ -488,46 +488,41 @@ section#awards a:hover { text-decoration-color: #ffffff; }
 .research-card i { color: var(--ink) !important; }
 .research-card p { color: var(--muted); font-size: 0.9rem; }
 
-/* === Skill cards (flat, monochrome icons) === */
-.skill-card {
-    display: flex;
-    flex-direction: column;
+/* === Skills directory: categories and compact technology labels === */
+.skills-directory {
+    max-width: 800px;
+    margin: 0 auto;
+    border-top: 1px solid var(--rule);
+}
+.skills-row {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
     align-items: center;
-    gap: 0.7rem;
-    padding: 1.5rem 1rem;
-    border: 1px solid var(--rule);
-    border-radius: 0;
-    background: #ffffff;
-    transition: border-color 0.15s;
-    contain: layout style;
+    gap: 24px;
+    padding: 24px 8px;
+    border-bottom: 1px solid var(--rule);
 }
-.skill-card:hover {
-    box-shadow: none;
-    transform: none;
-    border-color: var(--ink);
+.skills-row dt {
+    font-size: .85rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .04em;
 }
-.skill-card i,
-.skill-card img {
-    font-size: 2.8rem;
-    line-height: 1;
-    filter: grayscale(1) brightness(0.4);
-    transition: filter 0.15s;
+.skills-row dd { margin: 0; min-width: 0; }
+.skills-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 40px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
-.skill-card img {
-    width: 2.8rem;
-    height: 2.8rem;
-    object-fit: contain;
-    display: block;
-}
-.skill-card:hover i,
-.skill-card:hover img { filter: grayscale(1) brightness(0); }
-.skill-card span {
-    font-size: 0.78rem;
-    font-weight: 600;
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink);
+.skills-items li { display: inline-flex; align-items: center; gap: 10px; }
+.skills-items i { font-size: 23px; line-height: 1; color: var(--ink); }
+.skills-items span { font-size: .95rem; font-weight: 500; }
+@media (max-width: 575.98px) {
+    .skills-row { grid-template-columns: 1fr; gap: 12px; padding: 20px 4px; }
+    .skills-items { gap: 16px 28px; }
 }
 
 /* === Career timeline (dot-style horizontal history graph) === */
