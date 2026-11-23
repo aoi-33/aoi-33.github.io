@@ -266,6 +266,7 @@
                     { key: 'org_en', label: '主催(英)', type: 'text', col: 6, show: c => c.type === 'award' },
                     { key: 'desc_ja', label: '説明(日)', type: 'textarea', col: 6 },
                     { key: 'desc_en', label: '説明(英)', type: 'textarea', col: 6 },
+                    { key: 'images', label: '写真・賞状（任意・上から表示順）', type: 'images', col: 12 },
                 ],
                 listTitle: e => e.type === 'award' ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim() : (e.title_ja || ''),
                 preview: d => { window.Activity.renderActivity(d, $('activity-list')); window.Activity.renderAwards(d, $('awards-list')); },
@@ -355,7 +356,11 @@
             $('formFields').innerHTML = col.fields.map(f => {
                 const id = 'f-' + f.key;
                 let ctrl;
-                if (f.type === 'select') {
+                if (f.type === 'images') {
+                    ctrl = `<div id="${id}"></div>
+                        <button type="button" class="btn btn-outline-dark btn-sm mt-2" id="add-entry-image">画像を追加</button>
+                        <p class="hint mt-2">画像を assets/img/entries/ 内に保存してパスを入力してください。画像ファイルは別途アップロードが必要です。例：assets/img/entries/tmi-2026/certificate.jpg</p>`;
+                } else if (f.type === 'select') {
                     ctrl = `<select class="form-select" id="${id}">`
                         + f.options.map(o => `<option value="${esc(o.v)}">${esc(o.ja)} (${esc(o.v)})</option>`).join('')
                         + `</select>`;
@@ -370,9 +375,31 @@
                     ${ctrl}
                 </div>`;
             }).join('');
+            $('add-entry-image')?.addEventListener('click', () => addImageRow());
             // Re-evaluate conditional fields when the type changes
             const typeEl = $('f-type');
             if (typeEl) typeEl.addEventListener('change', applyConditional);
+        }
+
+        function addImageRow(image = {}) {
+            const row = document.createElement('div');
+            row.className = 'border p-3 mb-2 entry-image-row';
+            row.innerHTML = `
+                <label class="d-block mb-2">画像パス
+                    <input type="text" class="form-control" data-image-src value="${esc(image.src || '')}" placeholder="assets/img/entries/event/certificate.jpg">
+                </label>
+                <label class="d-block mb-2">説明・代替テキスト（日）
+                    <input type="text" class="form-control" data-image-ja value="${esc(image.caption_ja || '')}" placeholder="最優秀プレゼンテーション賞の賞状">
+                </label>
+                <label class="d-block mb-2">説明・代替テキスト（英）
+                    <input type="text" class="form-control" data-image-en value="${esc(image.caption_en || '')}" placeholder="Best Presentation Award certificate">
+                </label>
+                <button type="button" class="btn btn-outline-danger btn-sm">この画像を削除</button>`;
+            row.querySelector('button').addEventListener('click', () => {
+                row.remove();
+                $('add-entry-image').focus();
+            });
+            $('f-images').append(row);
         }
 
         function formCtx() {
@@ -396,7 +423,10 @@
             $('modalTitle').textContent = (index >= 0 ? '編集' : '新規追加') + ' — ' + activeCol().label;
             activeCol().fields.forEach(f => {
                 const el = $('f-' + f.key);
-                if (el) el.value = item[f.key] != null ? item[f.key] : '';
+                if (f.type === 'images') {
+                    el.replaceChildren();
+                    if (Array.isArray(item.images)) item.images.forEach(image => addImageRow(image));
+                } else if (el) el.value = item[f.key] != null ? item[f.key] : '';
             });
             applyConditional();
             modal.show();
@@ -409,6 +439,24 @@
                 const visible = f.show ? !!f.show(ctx) : true;
                 if (!visible) continue;
                 const el = $('f-' + f.key);
+                if (f.type === 'images') {
+                    const images = [];
+                    for (const row of el.querySelectorAll('.entry-image-row')) {
+                        const src = row.querySelector('[data-image-src]').value.trim();
+                        const caption_ja = row.querySelector('[data-image-ja]').value.trim();
+                        const caption_en = row.querySelector('[data-image-en]').value.trim();
+                        if (!src && !caption_ja && !caption_en) continue;
+                        if (!window.Activity.safeImageUrl(src)) {
+                            return { error: '画像パスは assets/img/ 内のパス、または http(s) のURLを入力してください。' };
+                        }
+                        if (!caption_ja && !caption_en) {
+                            return { error: '画像の説明を日本語または英語で入力してください。' };
+                        }
+                        images.push({ src, caption_ja, caption_en });
+                    }
+                    if (images.length) out.images = images;
+                    continue;
+                }
                 const val = (el.value || '').trim();
                 if (f.required && !val) return { error: `「${f.label}」は必須です。` };
                 // validate date format only when a value is present (date may be optional)

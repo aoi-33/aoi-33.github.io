@@ -4,6 +4,13 @@
     "type": "award",
     "url": "https://www.tmi.mirai.nagoya-u.ac.jp/contents/post-5146/",
     "prize_ja": "最優秀プレゼンテーション賞",
+    "images": [
+      {
+        "src": "assets/img/entries/tmi-2026/award-ceremony.jpg",
+        "caption_ja": "第6回超学際移動イノベーションシンポジウムでの表彰式の様子",
+        "caption_en": "Award ceremony at the 6th Transdisciplinary Mobility Innovation Symposium"
+      }
+    ],
     "prize_en": "Best Presentation Award",
     "event_ja": "第6回超学際移動イノベーションシンポジウム",
     "event_en": "6th Transdisciplinary Mobility Innovation Symposium",
@@ -17,6 +24,13 @@
     "type": "award",
     "url": "https://dicomo.org/commendation/",
     "prize_ja": "ヤングリサーチャー賞",
+    "images": [
+      {
+        "src": "assets/img/entries/dicomo-2026/young-researcher-award.webp",
+        "caption_ja": "DICOMO2026 ヤングリサーチャー賞の賞状",
+        "caption_en": "DICOMO2026 Young Researcher Award certificate"
+      }
+    ],
     "prize_en": "IPSJ Young Researcher Award",
     "event_ja": "DICOMO2026",
     "event_en": "DICOMO2026",
@@ -30,6 +44,13 @@
     "type": "award",
     "url": "https://dicomo.org/commendation/",
     "prize_ja": "優秀論文賞",
+    "images": [
+      {
+        "src": "assets/img/entries/dicomo-2026/excellent-paper-award.webp",
+        "caption_ja": "DICOMO2026 優秀論文賞の賞状",
+        "caption_en": "DICOMO2026 Excellent Paper Award certificate"
+      }
+    ],
     "prize_en": "IPSJ Excellent Paper Award",
     "event_ja": "DICOMO2026",
     "event_en": "DICOMO2026",

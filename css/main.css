@@ -1006,3 +1006,54 @@ section#awards a,
         overflow-wrap: anywhere;
     }
 }
+
+/* Optional photos and certificates: shared by the site and admin preview. */
+.entry-gallery-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 28px;
+    height: 28px;
+    margin-left: .25rem;
+    padding: 4px;
+    border: 0;
+    border-radius: 3px;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+.entry-gallery-button:hover { background: rgb(127 127 127 / .18); }
+.entry-gallery-button svg { flex-shrink: 0; }
+.entry-gallery-button:focus-visible,
+.entry-gallery button:focus-visible { outline: 3px solid var(--accent-on-dark); outline-offset: 3px; }
+body.entry-gallery-open { overflow: hidden; }
+.entry-gallery {
+    width: min(960px, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    padding: clamp(12px, 3vw, 24px);
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+}
+.entry-gallery::backdrop { background: rgb(0 0 0 / .8); }
+.entry-gallery-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.entry-gallery h2 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+.entry-gallery button {
+    min-height: 44px;
+    padding: .5rem .75rem;
+    border: 1px solid var(--ink);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+}
+.entry-gallery-close { flex-shrink: 0; }
+.entry-gallery figure { margin: 16px 0; text-align: center; }
+.entry-gallery-image { display: block; max-height: 65dvh; max-width: 100%; width: auto; height: auto; margin: auto; object-fit: contain; }
+.entry-gallery figcaption { margin-top: 12px; font-size: .9rem; overflow-wrap: anywhere; }
+.entry-gallery-nav { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.entry-gallery [hidden] { display: none; }
+.entry-gallery button:disabled { opacity: .4; }
+.entry-gallery-error { text-align: center; padding: 32px 0; }
