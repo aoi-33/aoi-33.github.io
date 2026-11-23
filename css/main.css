@@ -687,7 +687,7 @@ section#awards a:hover { text-decoration-color: #ffffff; }
 .publication-list {
     list-style: none;
     padding: 0;
-    max-width: 760px;
+    max-width: 1040px;
     margin: 0 auto;
     width: 100%;
     contain: layout style;
@@ -1052,3 +1052,18 @@ body.entry-gallery-open { overflow: hidden; }
 .entry-gallery [hidden] { display: none; }
 .entry-gallery button:disabled { opacity: .4; }
 .entry-gallery-error { text-align: center; padding: 32px 0; }
+
+/* Publication awards: expandable names and certificate buttons. */
+.pub-awards { display: inline; font-size: .85rem; font-weight: 400; letter-spacing: normal; }
+.pub-awards summary { display: inline-flex; align-items: center; justify-content: center; gap: 3px; min-width: 36px; min-height: 28px; padding: 3px 5px; margin-left: 4px; vertical-align: middle; border-radius: 3px; color: #88651e; cursor: pointer; list-style: none; }
+.pub-awards summary::-webkit-details-marker { display: none; }
+.pub-awards summary:hover, .pub-awards[open] summary { background: #f5eedf; }
+.pub-awards summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.pub-award-count { font-family: var(--bs-font-monospace); font-size: .7rem; }
+.pub-awards-panel { margin: 12px 0 16px; padding: 16px 20px; background: #fbf9f4; border-left: 2px solid #b38b40; color: var(--ink); }
+.pub-awards-label { margin: 0 0 8px; font-size: .7rem; color: var(--muted); letter-spacing: .06em; }
+.pub-awards-panel ul { margin: 0; padding: 0; list-style: none; }
+.pub-awards-panel li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: .85rem; }
+.pub-awards-panel .entry-gallery-button { flex-shrink: 0; margin: 0; }
+
+.pub-awards-panel { text-wrap: wrap; }

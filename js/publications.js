@@ -9,6 +9,7 @@
  * single-language (the paper's own language); only the section heading and the
  * type badge are bilingual.
  *   {
+ *     "id":     "stable-publication-id", // optional; matches entries[].publication_id
  *     "date":   "YYYY-MM-DD",
  *     "type":   "journal" | "international" | "domestic" | "poster" | "preprint" | "thesis",
  *     "authors":"Last F., Last F., …",  // self name is auto-bolded (see SELF_NAMES)
@@ -47,7 +48,21 @@
         return out;
     }
 
-    function render(pubs, ul) {
+    function awardIndicator(publication, entries) {
+        const awards = publication.id
+            ? entries.filter(entry => entry.type === 'award' && entry.publication_id === publication.id) : [];
+        if (!awards.length) return '';
+        const icon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v6a4 4 0 0 1-8 0V3Z M8 5H4v2a4 4 0 0 0 4 4 M16 5h4v2a4 4 0 0 1-4 4 M12 13v5 M8 21h8 M10 18h4v3h-4z"/></svg>`;
+        return `<details class="pub-awards"><summary>${icon}<span class="pub-award-count" aria-hidden="true">${awards.length}</span><span class="visually-hidden" data-ja="受賞情報（${awards.length}件）" data-en="Awards (${awards.length})">受賞情報（${awards.length}件）</span></summary>
+            <div class="pub-awards-panel"><p class="pub-awards-label" data-ja="この論文・発表の受賞" data-en="Awards for this paper / presentation">この論文・発表の受賞</p><ul>${awards.map(award => {
+                const images = Array.isArray(award.images)
+                    ? award.images.filter(image => image && A.safeImageUrl(image.src)) : [];
+                const gallery = images.length ? `<button type="button" class="entry-gallery-button" aria-haspopup="dialog" data-gallery="${escapeHtml(JSON.stringify(images))}" data-gallery-title-ja="${escapeHtml(award.prize_ja)}" data-gallery-title-en="${escapeHtml(award.prize_en)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span class="visually-hidden" data-ja="賞状を見る" data-en="View certificate">賞状を見る</span></button>` : '';
+                return `<li><span data-ja="${escapeHtml(escapeHtml(award.prize_ja))}" data-en="${escapeHtml(escapeHtml(award.prize_en))}">${escapeHtml(award.prize_ja)}</span>${gallery}</li>`;
+            }).join('')}</ul></div></details>`;
+    }
+
+    function render(pubs, ul, entries = []) {
         ul = ul || document.getElementById('publication-list');
         if (!ul) return;
         ul.innerHTML = A.sortByDateDesc(pubs).map(p => {
@@ -64,7 +79,7 @@
                     <span class="pub-year">${escapeHtml(year)}</span>
                     <span class="pub-badge ${meta.cls}" data-en="${escapeHtml(meta.en)}" data-ja="${escapeHtml(meta.ja)}">${escapeHtml(meta.ja)}</span>
                     <div class="pub-body">
-                        <p class="pub-title">${titleHtml}</p>
+                        <div class="pub-title">${titleHtml} ${awardIndicator(p, entries)}</div>
                         <p class="pub-authors">${highlightSelf(escapeHtml(p.authors || ''))}</p>
                         ${venueBits ? `<p class="pub-venue">${venueBits}</p>` : ''}
                     </div>

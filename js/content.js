@@ -68,8 +68,9 @@
                 fetch('data/publications.json', { cache: 'no-cache' }),
                 fetch('data/products.json', { cache: 'no-cache' }),
             ]);
+            let entries = [];
             if (entriesRes.ok) {
-                const entries = await entriesRes.json();
+                entries = await entriesRes.json();
                 window.Activity.renderActivity(entries);
                 window.Activity.renderAwards(entries);
             } else {
@@ -77,7 +78,7 @@
             }
             if (pubsRes.ok) {
                 const pubs = await pubsRes.json();
-                window.Publications.render(pubs);
+                window.Publications.render(pubs, undefined, entries);
             } else {
                 console.error('[publications] HTTP', pubsRes.status);
             }

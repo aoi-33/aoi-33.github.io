@@ -24,6 +24,7 @@
     "type": "award",
     "url": "https://dicomo.org/commendation/",
     "prize_ja": "ヤングリサーチャー賞",
+    "publication_id": "dicomo-2026-1e-3",
     "images": [
       {
         "src": "assets/img/entries/dicomo-2026/young-researcher-award.webp",
@@ -44,6 +45,7 @@
     "type": "award",
     "url": "https://dicomo.org/commendation/",
     "prize_ja": "優秀論文賞",
+    "publication_id": "dicomo-2026-1e-3",
     "images": [
       {
         "src": "assets/img/entries/dicomo-2026/excellent-paper-award.webp",

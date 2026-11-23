@@ -14,7 +14,7 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
     <link href="https://use.fontawesome.com/releases/v6.5.2/css/all.css" rel="stylesheet"
           integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous" />
-    <link href="css/main.css" rel="stylesheet" />
+    <link href="css/main.css?v=20261123-awards" rel="stylesheet" />
 
     <style>
         /* Editor chrome only — not part of the public site */
@@ -235,7 +235,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="js/activity.js"></script>
-    <script src="js/publications.js"></script>
+    <script src="js/publications.js?v=20261123-awards"></script>
     <script src="js/products.js"></script>
     <script>
         const $ = id => document.getElementById(id);
@@ -266,6 +266,7 @@
                     { key: 'org_en', label: '主催(英)', type: 'text', col: 6, show: c => c.type === 'award' },
                     { key: 'desc_ja', label: '説明(日)', type: 'textarea', col: 6 },
                     { key: 'desc_en', label: '説明(英)', type: 'textarea', col: 6 },
+                    { key: 'publication_id', label: '関連論文ID（任意・論文側のIDと一致させる）', type: 'text', col: 12 },
                     { key: 'images', label: '写真・賞状（任意・上から表示順）', type: 'images', col: 12 },
                 ],
                 listTitle: e => e.type === 'award' ? `${e.event_ja || ''} ${e.prize_ja || ''}`.trim() : (e.title_ja || ''),
@@ -276,6 +277,7 @@
                 label: '論文',
                 path: 'data/publications.json',
                 fields: [
+                    { key: 'id', label: '論文ID（受賞を紐づける場合・例：dicomo-2026-1e-3）', type: 'text', col: 12 },
                     { key: 'date', label: '日付', type: 'date', required: true, col: 4 },
                     { key: 'type', label: '種別', type: 'select', col: 4, options: [
                         { v: 'journal', ja: '論文誌' }, { v: 'international', ja: '国際会議' },
@@ -288,7 +290,7 @@
                     { key: 'extra', label: '巻号・ページ等', type: 'text', col: 4, placeholder: 'Vol.1, pp.1–8' },
                 ],
                 listTitle: p => p.title || '',
-                preview: d => { window.Publications.render(d, $('publication-list')); },
+                preview: d => { window.Publications.render(d, $('publication-list'), awardEntries); },
                 previewWrap: 'preview-pubs',
             },
             products: {
@@ -311,6 +313,7 @@
         // ---- State ----
         let collection = 'entries';
         let items = [];
+        let awardEntries = [];
         let modal;
         // Per-collection flag: true right after a GitHub save of that collection until a
         // fresh GitHub load. Used by the manual reload button to warn that the Pages CDN
@@ -324,6 +327,7 @@
         function refresh() {
             items = window.Activity.sortByDateDesc(items);
             renderList();
+            if (collection === 'entries') awardEntries = items;
             activeCol().preview(items);
             $('jsonOut').value = JSON.stringify(items, null, 2);
             $('entryCount').textContent = `(${items.length}件)`;
@@ -506,6 +510,16 @@
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 items = await res.json();
                 $('loadStatus').textContent = `${path} を読み込みました（${items.length}件）。`;
+                if (collection === 'publications') {
+                    try {
+                        const awardsRes = await fetch('data/entries.json', { cache: 'no-cache' });
+                        if (!awardsRes.ok) throw new Error('HTTP ' + awardsRes.status);
+                        awardEntries = await awardsRes.json();
+                    } catch (err) {
+                        console.warn('[publication awards]', err);
+                        $('loadStatus').textContent += ' 受賞情報を取得できませんでした。活動データを読み込むと受賞プレビューも確認できます。';
+                    }
+                }
             } catch (err) {
                 items = [];
                 $('loadStatus').textContent =
