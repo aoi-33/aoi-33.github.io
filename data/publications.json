@@ -1,5 +1,14 @@
 [
   {
+    "date": "2026-10-13",
+    "type": "poster",
+    "authors": "Rio Ishii, Haru Terashima, Aoi Sassa, Naoki Tamura, Kazuyuki Shoji, Kenta Urano, Takuro Yonezawa, Nobuo Kawaguchi",
+    "title": "Constructing Vertically-Resolved Location Embeddings from Altitude-aware Human Mobility Data",
+    "venue": "UbiComp/ISWC 2026",
+    "extra": "Poster Session - Main Conference, P124",
+    "url": "https://www.ubicomp.org/ubicomp-iswc-2026/posters-and-demos-2026/"
+  },
+  {
     "date": "2026-07-07",
     "type": "international",
     "authors": "Aoi Sassa, Haru Terashima, Naoki Tamura, Kazuyuki Shoji, Kenta Urano, Takuro Yonezawa, Tadashi Yoshikawa, Nobuo Kawaguchi",
